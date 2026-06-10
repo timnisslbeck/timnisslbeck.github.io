@@ -1,0 +1,8 @@
+@inproceedings{kouw2025message,
+  title={Message passing-based inference in an autoregressive active inference agent},
+  author={Kouw, Wouter M and Nisslbeck, Tim N and Nuijten, Wouter LN},
+  booktitle={International Workshop on Active Inference},
+  pages={285--298},
+  year={2025},
+  organization={Springer}
+}

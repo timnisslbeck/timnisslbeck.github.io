@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Tim Nisslbeck">
+<meta property="og:title" content="Tim Nisslbeck">
+<meta property="og:description" content="PhD candidate · Sample-Efficient Robot Learning · Probabilistic World Models · Active Inference">
+<meta property="og:image" content="https://www.timnisslbeck.com/files/me.jpg">
+<meta property="og:url" content="https://www.timnisslbeck.com/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tim Nisslbeck">
+<meta name="twitter:description" content="PhD candidate · Sample-Efficient Robot Learning · Probabilistic World Models · Active Inference">
+<meta name="twitter:image" content="https://www.timnisslbeck.com/files/me.jpg">
+<title>Tim Nisslbeck</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%2316213e'/%3E%3Crect x='7' y='9' width='18' height='15' rx='3' fill='%23f09228'/%3E%3Ccircle cx='12' cy='15' r='2.5' fill='white'/%3E%3Ccircle cx='20' cy='15' r='2.5' fill='white'/%3E%3Ccircle cx='12' cy='15' r='1' fill='%2316213e'/%3E%3Ccircle cx='20' cy='15' r='1' fill='%2316213e'/%3E%3Crect x='10' y='20' width='3' height='2' rx='.5' fill='%2316213e'/%3E%3Crect x='14.5' y='20' width='3' height='2' rx='.5' fill='%2316213e'/%3E%3Crect x='19' y='20' width='3' height='2' rx='.5' fill='%2316213e'/%3E%3Crect x='15' y='5' width='2' height='5' rx='1' fill='%23f09228'/%3E%3Ccircle cx='16' cy='4.5' r='2' fill='%23f09228'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+<link rel="stylesheet" href="style.css?v=2.5">
+
+<script>
+(function () {
+  var stored = localStorage.getItem("theme");
+  var prefer = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", stored || prefer);
+})();
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  var header = document.querySelector(".header");
+  var nav    = document.getElementById("sticky-nav");
+  var obs = new IntersectionObserver(function (entries) {
+    nav.classList.toggle("visible", !entries[0].isIntersecting);
+  }, { threshold: 0 });
+  obs.observe(header);
+
+  document.querySelectorAll(".stars[data-repo]").forEach(function (el) {
+    fetch("https://api.github.com/repos/" + el.dataset.repo)
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (d.stargazers_count) {
+          var svg = el.querySelector(".gh-icon");
+          el.textContent = " \u2605 " + d.stargazers_count.toLocaleString();
+          if (svg) el.prepend(svg);
+        }
+      })
+      .catch(function () {});
+  });
+
+  function getTheme() { return document.documentElement.getAttribute("data-theme"); }
+  function syncToggles() {
+    var isDark = getTheme() === "dark";
+    document.querySelectorAll(".theme-toggle").forEach(function (b) {
+      b.classList.toggle("is-dark", isDark);
+      b.setAttribute("aria-checked", isDark ? "true" : "false");
+    });
+  }
+  function setTheme(t) {
+    document.documentElement.setAttribute("data-theme", t);
+    localStorage.setItem("theme", t);
+    syncToggles();
+  }
+  syncToggles();
+  document.querySelectorAll(".theme-toggle").forEach(function (b) {
+    b.addEventListener("click", function () {
+      setTheme(getTheme() === "dark" ? "light" : "dark");
+    });
+  });
+
+  document.querySelectorAll(".desc-toggle").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var desc = document.getElementById(btn.getAttribute("aria-controls"));
+      var open = desc.classList.toggle("open");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      var label = btn.querySelector(".desc-toggle-label");
+      if (label && (label.textContent === "more" || label.textContent === "less")) {
+        label.textContent = open ? "less" : "more";
+      }
+    });
+  });
+
+  function openBackground() {
+    var box = document.getElementById("background");
+    if (!box) return;
+    var desc = document.getElementById("desc-terms");
+    var btn  = box.querySelector(".desc-toggle");
+    if (desc && !desc.classList.contains("open")) {
+      desc.classList.add("open");
+      if (btn) btn.setAttribute("aria-expanded", "true");
+    }
+    box.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  document.querySelectorAll('a[href="#background"]').forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      e.preventDefault();
+      openBackground();
+    });
+  });
+
+  var triggers = Array.from(document.querySelectorAll(".lb-trigger, .interest-media"));
+  var lb       = document.getElementById("lb");
+  var lbImg    = document.getElementById("lb-img");
+  var lbVid    = document.getElementById("lb-vid");
+  var lbCap    = document.getElementById("lb-cap");
+  var cur      = 0;
+
+  function isVideo(src) { return /\.(mp4|webm|ogg)(\?.*)?$/i.test(src); }
+
+  function openLB(idx) {
+    cur = idx;
+    var el  = triggers[idx];
+    var src = el.dataset.src;
+    var cap = el.dataset.caption || "";
+    lbImg.style.display = "none";
+    lbVid.style.display = "none";
+    lbImg.src = "";
+    lbVid.src = "";
+    if (isVideo(src)) {
+      lbVid.src = src; lbVid.style.display = "block"; lbVid.load();
+    } else {
+      lbImg.src = src; lbImg.style.display = "block";
+    }
+    lbCap.textContent = cap;
+    lb.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeLB() {
+    lb.classList.remove("open");
+    document.body.style.overflow = "";
+    lbVid.pause(); lbVid.src = ""; lbImg.src = "";
+  }
+
+  function stepLB(dir) { openLB((cur + dir + triggers.length) % triggers.length); }
+
+  triggers.forEach(function (el, i) {
+    el.addEventListener("click", function (e) { e.preventDefault(); e.stopPropagation(); openLB(i); });
+  });
+
+  document.getElementById("lb-close").addEventListener("click", closeLB);
+  document.getElementById("lb-prev").addEventListener("click", function (e) { e.stopPropagation(); stepLB(-1); });
+  document.getElementById("lb-next").addEventListener("click", function (e) { e.stopPropagation(); stepLB(1); });
+  lb.addEventListener("click", function (e) { if (e.target === lb) closeLB(); });
+  document.addEventListener("keydown", function (e) {
+    if (!lb.classList.contains("open")) return;
+    if (e.key === "Escape") closeLB();
+    if (e.key === "ArrowLeft") stepLB(-1);
+    if (e.key === "ArrowRight") stepLB(1);
+  });
+});
+
+function scrollToContact() {
+  document.getElementById("contact").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+</script>
+<script async src="https://plausible.io/js/pa-_osdAkeHJ-YnKzSdgkJEX.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+</head>
+<body>
+
+<div class="lightbox" id="lb" role="dialog" aria-modal="true" aria-label="Media lightbox">
+  <button class="lightbox-close" id="lb-close" aria-label="Close">&times;</button>
+  <button class="lightbox-prev" id="lb-prev" aria-label="Previous">&#8249;</button>
+  <button class="lightbox-next" id="lb-next" aria-label="Next">&#8250;</button>
+  <div class="lightbox-inner" id="lb-inner">
+    <img id="lb-img" src="" alt="" style="display:none;">
+    <video id="lb-vid" src="" controls autoplay loop muted playsinline style="display:none;"></video>
+    <div class="lightbox-caption" id="lb-cap"></div>
+  </div>
+</div>
+
+<nav class="sticky-nav noselect" id="sticky-nav">
+  <div class="sticky-nav-content">
+    <a class="sticky-nav-name bold" href="javascript:void(0);"
+       onclick="window.scrollTo({top:0,behavior:'smooth'})">Tim Nisslbeck</a>
+    <div class="sticky-nav-links">
+      <a href="javascript:void(0);" onclick="scrollToContact()">Email</a>
+      <a href="https://scholar.google.com/citations?user=vwe1TwoAAAAJ&hl=en">Scholar</a>
+      <a href="https://github.com/abpolym">GitHub</a>
+      <button class="theme-toggle" role="switch" aria-checked="false" aria-label="Toggle dark/light mode">
+        <span class="theme-toggle-track">
+          <span class="theme-toggle-icon theme-toggle-sun">☀</span>
+          <span class="theme-toggle-icon theme-toggle-moon">🌙</span>
+          <span class="theme-toggle-knob"></span>
+        </span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="header noselect">
+  <div class="header-div content row">
+    <div class="header-profile-picture" style="background-image: url(files/me.jpg);"></div>
+    <div class="header-text">
+      <div class="header-name">
+        <h1>Tim Nisslbeck</h1>
+        <button class="theme-toggle theme-toggle-header" role="switch" aria-checked="false" aria-label="Toggle dark/light mode">
+          <span class="theme-toggle-track">
+            <span class="theme-toggle-icon theme-toggle-sun">☀</span>
+            <span class="theme-toggle-icon theme-toggle-moon">🌙</span>
+            <span class="theme-toggle-knob"></span>
+          </span>
+        </button>
+      </div>
+      <div class="header-subtitle">
+        PhD candidate · BIASlab, TU Eindhoven
+      </div>
+      <div class="header-links">
+        <span class="header-links-row">
+          <a class="btn" href="javascript:void(0);" onclick="scrollToContact()">Email</a> /
+          <a class="btn" href="https://scholar.google.com/citations?user=vwe1TwoAAAAJ&hl=en">Google Scholar</a> /
+          <a class="btn" href="https://github.com/abpolym">GitHub</a>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="content" style="padding-bottom: 64px;">
+
+  <div>
+    <p>
+      I am a PhD candidate at <a href="https://biaslab.org">BIASlab</a>,
+      TU Eindhoven, supervised by
+      <a href="https://wmkouw.github.io">Wouter Kouw</a>.
+      My research focuses on <span class="bold">sample-efficient robot learning</span>
+      — designing agents that learn to control physical robots from far fewer
+      interactions than current reinforcement learning methods require.
+      I build <span class="bold">probabilistic world models</span> that maintain a
+      full Bayesian posterior over their parameters and update exactly at each
+      timestep, and I develop model-based agents that use
+      <a class="term-link" href="#background"><span class="bold">expected free energy (EFE)</span></a>
+      as their planning objective — a variational quantity from the
+      <a class="term-link" href="#background"><span class="bold">active inference</span></a>
+      framework that replaces the hand-designed reward function and jointly
+      drives goal attainment and uncertainty reduction, similar in spirit to
+      information-seeking, curiosity-driven model-based RL. I validate these
+      methods on real robotic hardware.
+    </p>
+    <p>
+      Before my PhD I worked as a researcher at
+      <a href="https://www.iis.fraunhofer.de">Fraunhofer IIS</a>,
+      where I applied deep reinforcement learning to autonomous driving,
+      led an interpretable RL project, and built large-scale HPC training
+      pipelines. For my MSc thesis I collected real RC car motion-capture
+      data, trained an LSTM-based world model on it, and used that learned
+      simulator to train a DDQN agent entirely in simulation before
+      deploying the policy on the physical car.
+    </p>
+    <p>I am broadly interested in the following areas:</p>
+
+    <div class="terminology interest" id="background">
+      <button class="desc-toggle" aria-expanded="false" aria-controls="desc-terms">
+        <span class="desc-toggle-label">Background — abbreviations and terms used below</span>
+      </button>
+      <div class="desc" id="desc-terms">
+        <div class="terminology-body">
+          <div class="term-entry">
+            <div class="term-name">Active inference</div>
+            <div class="term-def">A model-based framework for perception and action grounded in the Free Energy Principle. Agents simultaneously learn a world model via variational Bayesian inference and select actions by minimising a single variational objective — expected free energy — without a hand-designed reward function.</div>
+          </div>
+          <div class="term-entry">
+            <div class="term-name">Expected free energy (EFE)</div>
+            <div class="term-def">The planning objective used in active inference. It decomposes into a goal-seeking exploitation term (cross-entropy to a goal prior) and information-seeking exploration terms (a mutual-information term between predicted outputs and model parameters, plus an expected-ambiguity term). Analogous in spirit to information-seeking / curiosity-driven objectives in model-based RL.</div>
+          </div>
+          <div class="term-entry">
+            <div class="term-name">MARX <span class="italic">(our work)</span></div>
+            <div class="term-def">Multivariate AutoRegressive model with eXogenous inputs — a probabilistic autoregressive dynamics model we introduced, with a matrix normal-Wishart conjugate prior that admits exact recursive Bayesian updates and a closed-form Student-t posterior predictive distribution.</div>
+          </div>
+          <div class="term-entry">
+            <div class="term-name">MARX-EFE / CARX-EFE <span class="italic">(our work)</span></div>
+            <div class="term-def">Our agents that pair a MARX world model with EFE-based action selection. CARX-EFE couples scalar autoregressive models for multi-joint systems; MARX-EFE extends this to the full multivariate setting with multi-step receding-horizon planning.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="interests">
+
+      <div class="interest">
+        <div class="interest-media"
+             data-src="files/projects/2025/nisslbeck-marx-mdpi.png"
+             data-caption="Probabilistic world models — factor graph for online Bayesian identification of a MARX dynamics model.">
+          <img src="files/projects/2025/nisslbeck-marx-mdpi.png"
+               alt="Factor graph for online Bayesian MARX identification"
+               style="width:100%; display:block; border-radius:6px; pointer-events:none;">
+        </div>
+        <div class="interest-text">
+          <span class="bold">Probabilistic world models</span>
+          <button class="desc-toggle" aria-expanded="false" aria-controls="desc-wm">
+            <span class="desc-toggle-label">more</span>
+          </button>
+          <div class="desc" id="desc-wm">
+            <div class="desc-body">
+              I design dynamics models that maintain a full Bayesian posterior
+              over their parameters and update exactly at each timestep, giving
+              calibrated uncertainty estimates without gradient descent or
+              replay buffers. This uncertainty is what makes the downstream
+              agent able to reason about what it does and does not yet know.
+              <div class="desc-keywords">
+                <span class="italic">Online Bayesian system identification ·
+                conjugate autoregressive models · factor graphs ·
+                uncertainty quantification</span><br/>
+                <a href="#nisslbeck2025factor">MARX (Entropy 2025)</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="interest">
+        <div class="interest-media"
+             data-src="files/marxefe-uncertainty.mp4"
+             data-caption="Decision-making under uncertainty — visualisation of the EFE objective decomposed into its goal-seeking and information-seeking components over control space, for varying prior parameter Ω.">
+          <video playsinline autoplay loop preload="metadata" muted width="100%"
+                 style="display:block; border-radius:6px; pointer-events:none;">
+            <source src="files/marxefe-uncertainty.mp4" type="video/mp4"/>
+          </video>
+        </div>
+        <div class="interest-text">
+          <span class="bold">Decision-making under uncertainty</span>
+          <button class="desc-toggle" aria-expanded="false" aria-controls="desc-dm">
+            <span class="desc-toggle-label">more</span>
+          </button>
+          <div class="desc" id="desc-dm">
+            <div class="desc-body">
+              I develop model-based agents whose planning objective decomposes
+              into a goal-seeking exploitation term and an information-seeking
+              exploration term, with no hand-designed reward function. The
+              balance between the two emerges automatically as the agent's
+              model uncertainty evolves over time.
+              <div class="desc-keywords">
+                <span class="italic">Active inference · expected free energy ·
+                model-based RL with information-seeking objectives ·
+                exploration vs exploitation</span><br/>
+                <a href="#nisslbeck2025marxefe">MARX-EFE (preprint)</a>,
+                <a href="#kouw2025message">MP-MARX-EFE (IWAI 2025)</a>,
+                <a href="#nisslbeck2024coupled">CARX-EFE (IWAI 2024)</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="interest">
+        <div class="interest-media"
+             data-src="files/bittle-pybullet.mp4"
+             data-caption="Real-robot learning — a Petoi Bittle quadruped learning to walk in the PyBullet simulation environment used to develop and test the MARX-EFE agent.">
+          <video playsinline autoplay loop preload="metadata" muted width="100%"
+                 style="display:block; border-radius:6px; pointer-events:none;">
+            <source src="files/bittle-pybullet.mp4" type="video/mp4"/>
+          </video>
+        </div>
+        <div class="interest-text">
+          <span class="bold">Real-robot learning</span>
+          <button class="desc-toggle" aria-expanded="false" aria-controls="desc-rl">
+            <span class="desc-toggle-label">more</span>
+          </button>
+          <div class="desc" id="desc-rl">
+            <div class="desc-body">
+              A key motivation for probabilistic world models is making
+              sample-efficient learning tractable on physical hardware. I
+              deploy learned controllers directly on real robots — without
+              simulation pre-training — to validate that sample efficiency
+              gains hold outside the simulator.
+              <div class="desc-keywords">
+                <span class="italic">Sample efficiency on physical hardware ·
+                sim-to-real transfer · quadruped locomotion ·
+                learning from scratch without demonstrations</span><br/>
+                <a href="#2026-nisslbeck-bittle">Bittle quadruped</a>,
+                <a href="#rccar">RC car MSc thesis</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div>
+    <h2 class="noselect">Publications and preprints</h2>
+    <p>Papers sorted by recency.
+       Representative papers are <span style="background-color: var(--bg-card)">highlighted</span>.
+       Click a thumbnail to enlarge; click "more" for a short summary.</p>
+
+    <div class="highlight publication row" id="2026-nisslbeck-bittle">
+      <div class="row-media">
+        <a class="lb-trigger"
+           data-src="files/projects/2026/nisslbeck-bittle.png"
+           data-caption="Autoregressive Active Inference for Sample-Efficient Quadruped Control (in preparation)."
+           style="background-image: url(files/projects/2026/nisslbeck-bittle.png);"></a>
+      </div>
+      <div class="row-text">
+        <span class="publication-title bold">
+          Autoregressive Active Inference for Sample-Efficient Quadruped Control
+        </span><br/>
+        <span class="bold">Tim Nisslbeck</span>, Wouter M Kouw<br/>
+        <span class="italic">In preparation</span>, 2026<br/>
+        <button class="desc-toggle" aria-expanded="false" aria-controls="desc-bittle">
+          <span class="desc-toggle-label">more</span>
+        </button>
+        <div class="desc" id="desc-bittle">
+          <div class="desc-body">
+            We deploy a model-based robot learning agent directly on a real Petoi
+            Bittle quadruped for obstacle avoidance — using only onboard IMU and
+            infrared sensors, no simulation, no pre-training. The agent maintains
+            a <a class="term-link" href="#background">MARX</a> world model that
+            updates via exact Bayesian inference at each timestep and selects
+            actions by minimising
+            <a class="term-link" href="#background">expected free energy (EFE)</a>,
+            a variational objective that automatically balances goal attainment
+            with active exploration. We compare against the model-based RL baseline
+            PILCO and evaluate sample efficiency.
+          </div>
+        </div>
+        <div class="coming-soon">project page coming soon</div>
+      </div>
+    </div>
+
+    <div class="highlight publication row" id="2025-vanpelt-marxefe-params">
+      <div class="row-media">
+        <a class="lb-trigger"
+           data-src="files/projects/2025/vanpelt-marxefe-params.avif"
+           data-caption="Effects of Priors on Epistemic Uncertainty in Autoregressive Active Inference — EurIPS EIML Workshop 2025."
+           style="background-image: url(files/projects/2025/vanpelt-marxefe-params.avif);"></a>
+      </div>
+      <div class="row-text">
+        <a class="publication-title bold" href="https://pure.tue.nl/ws/portalfiles/portal/386544975/2025_EIML.pdf">
+          Effects of Priors on Epistemic Uncertainty in Autoregressive Active Inference
+        </a><br/>
+        Esther G van Pelt, <span class="bold">Tim Nisslbeck</span>, Harm J W Belt, Ruud J G van Sloun, Wouter M Kouw<br/>
+        <span class="italic">
+          Workshop on Epistemic Intelligence in Machine Learning at
+          <a href="https://eurips.cc/workshops/">EurIPS</a>
+        </span>, 2025<br/>
+        <button class="desc-toggle" aria-expanded="false" aria-controls="desc-vanpelt">
+          <span class="desc-toggle-label">more</span>
+        </button>
+        <div class="desc" id="desc-vanpelt">
+          <div class="desc-body">
+            We study how prior hyperparameter choices shape the
+            <a class="term-link" href="#background">EFE</a> objective of
+            the <a class="term-link" href="#background">MARX-EFE</a> agent.
+            Visualising the objective decomposed into its
+            goal-seeking and information-seeking components over control space
+            shows that, for example, increasing the prior scale matrix Ω shifts
+            the balance within the information-seeking term from the
+            mutual-information component towards the expected-ambiguity component,
+            while the goal-seeking prior parameters S<sub>*</sub> and
+            m<sub>*</sub> steer the direction and sharpness of goal attainment.
+            The free energy-minimising agent reaches the goal prior sooner than a
+            standard model-predictive controller.
+          </div>
+        </div>
+        <a class="btn btn-red" href="https://pure.tue.nl/ws/portalfiles/portal/386544975/2025_EIML.pdf">pdf</a> /
+        <a class="btn btn-dark" href="bibtex/van2025effects.txt">bibtex</a>
+      </div>
+    </div>
+
+    <div class="highlight publication row" id="kouw2025message">
+      <div class="row-media">
+        <a class="lb-trigger"
+           data-src="files/projects/2025/kouw-marxefe-mp.png"
+           data-caption="Message Passing for Autoregressive Active Inference Agents — IWAI 2025."
+           style="background-image: url(files/projects/2025/kouw-marxefe-mp.png);"></a>
+      </div>
+      <div class="row-text">
+        <a class="publication-title bold" href="https://arxiv.org/abs/2509.25482">
+          Message Passing for Autoregressive Active Inference Agents
+        </a><br/>
+        Wouter M Kouw, <span class="bold">Tim Nisslbeck</span>, Wouter LN Nuijten<br/>
+        <span class="italic">
+          International Workshop on Active Inference
+          (<a href="https://iwaiworkshop.github.io">IWAI</a>)
+        </span>, 2025<br/>
+        <button class="desc-toggle" aria-expanded="false" aria-controls="desc-kouwmp">
+          <span class="desc-toggle-label">more</span>
+        </button>
+        <div class="desc" id="desc-kouwmp">
+          <div class="desc-body">
+            Reformulates the <a class="term-link" href="#background">MARX-EFE</a>
+            agent — Bayesian world model updates and multi-step EFE planning —
+            as message passing on a Forney-style factor graph, enabling a modular,
+            distributed implementation. This connects active inference to the
+            broader probabilistic graphical model literature and is validated on
+            a robot navigation task.
+          </div>
+        </div>
+        <a class="btn btn-red" href="https://arxiv.org/pdf/2509.25482">pdf</a> /
+        <a class="btn btn-green" href="https://github.com/biaslab/IWAI2025-MARXEFE-MP">code</a> /
+        <a class="btn btn-dark" href="bibtex/kouw2025message.txt">bibtex</a>
+      </div>
+    </div>
+
+    <div class="publication row" id="nisslbeck2025marxefe">
+      <div class="row-media">
+        <a class="lb-trigger"
+           data-src="files/projects/2025/nisslbeck-marxefe.png"
+           data-caption="Exploration versus Exploitation in Autoregressive Free Energy Minimising Agents — Preprint 2025."
+           style="background-image: url(files/projects/2025/nisslbeck-marxefe.png);"></a>
+      </div>
+      <div class="row-text">
+        <span class="publication-title bold">
+          Exploration versus Exploitation in Autoregressive Free Energy Minimising Agents
+        </span><br/>
+        <span class="bold">Tim Nisslbeck</span>, Wouter M Kouw<br/>
+        <span class="italic">Preprint</span>, 2025<br/>
+        <button class="desc-toggle" aria-expanded="false" aria-controls="desc-marxefe">
+          <span class="desc-toggle-label">more</span>
+        </button>
+        <div class="desc" id="desc-marxefe">
+          <div class="desc-body">
+            Full derivation of the <a class="term-link" href="#background">MARX-EFE</a>
+            agent from first principles. The MARX world model admits exact
+            recursive Bayesian updates and a closed-form posterior predictive
+            distribution. The planning objective —
+            <a class="term-link" href="#background">expected free energy</a> —
+            decomposes analytically into a goal-seeking exploitation term and
+            information-seeking exploration terms, with no reward engineering
+            required.
+          </div>
+        </div>
+        <div class="coming-soon">preprint coming soon</div>
+      </div>
+    </div>
+
+    <div class="highlight publication row" id="nisslbeck2025factor">
+      <div class="row-media">
+        <a class="lb-trigger"
+           data-src="files/projects/2025/nisslbeck-marx-mdpi.png"
+           data-caption="Factor Graph-Based Online Bayesian Identification for MARX Models — Entropy (MDPI) 2025."
+           style="background-image: url(files/projects/2025/nisslbeck-marx-mdpi.png);"></a>
+      </div>
+      <div class="row-text">
+        <a class="publication-title bold"
+           href="https://www.mdpi.com/1099-4300/27/7/679">
+          Factor Graph-Based Online Bayesian Identification and Component Evaluation
+          for Multivariate Autoregressive Exogenous Input Models
+        </a><br/>
+        <span class="bold">Tim Nisslbeck</span>, Wouter M Kouw<br/>
+        <span class="italic">
+          Entropy (<a href="https://www.mdpi.com/journal/entropy">MDPI</a>)
+        </span>, 2025<br/>
+        <button class="desc-toggle" aria-expanded="false" aria-controls="desc-factor">
+          <span class="desc-toggle-label">more</span>
+        </button>
+        <div class="desc" id="desc-factor">
+          <div class="desc-body">
+            Introduces the MARX estimator — a probabilistic autoregressive dynamics
+            model with exact online Bayesian updates — cast as message passing on a
+            factor graph. A novel decomposition of model surprisal into accuracy and
+            complexity terms enables interpretable model selection. Validated on
+            simulated autoregressive systems and a double mass-spring-damper.
+          </div>
+        </div>
+        <a class="btn btn-red" href="https://www.mdpi.com/1099-4300/27/7/679/pdf">pdf</a> /
+        <a class="btn btn-green" href="https://github.com/biaslab/MDPI2025-MARX">code</a> /
+        <a class="btn btn-dark" href="bibtex/nisslbeck2025factor.txt">bibtex</a>
+      </div>
+    </div>
+
+    <div class="publication row" id="nisslbeck2025online">
+      <div class="row-media">
+        <a class="lb-trigger"
+           data-src="files/projects/2025/nisslbeck-marx-ecc.png"
+           data-caption="Online Bayesian System Identification in Multivariate Autoregressive Models via Message Passing — ECC 2025."
+           style="background-image: url(files/projects/2025/nisslbeck-marx-ecc.png);"></a>
+      </div>
+      <div class="row-text">
+        <a class="publication-title bold" href="https://arxiv.org/abs/2506.02710">
+          Online Bayesian System Identification in Multivariate Autoregressive Models
+          via Message Passing
+        </a><br/>
+        <span class="bold">Tim Nisslbeck</span>, Wouter M Kouw<br/>
+        <span class="italic">
+          European Control Conference
+          (<a href="https://ecc25.euca-ecc.org">ECC</a>)
+        </span>, 2025<br/>
+        <button class="desc-toggle" aria-expanded="false" aria-controls="desc-ecc">
+          <span class="desc-toggle-label">more</span>
+        </button>
+        <div class="desc" id="desc-ecc">
+          <div class="desc-body">
+            Proposes a recursive Bayesian estimation procedure for multivariate
+            autoregressive dynamics models with exogenous inputs, formulated as
+            message passing on a factor graph. Produces full posterior
+            distributions over model parameters and noise precision, with
+            competitive performance on a double mass-spring-damper benchmark.
+          </div>
+        </div>
+        <a class="btn btn-red" href="https://arxiv.org/pdf/2506.02710">pdf</a> /
+        <a class="btn btn-green" href="https://github.com/biaslab/ECC2025-MARXEFE">code</a> /
+        <a class="btn btn-dark" href="bibtex/nisslbeck2025online.txt">bibtex</a>
+      </div>
+    </div>
+
+    <div class="highlight publication row" id="nisslbeck2024locomotion">
+      <div class="row-media">
+        <a class="lb-trigger"
+           data-src="files/projects/2024/nisslbeck-sample-efficient-locomotion.png"
+           data-caption="Insights into Sample-Efficient Learning of Quadrupedal Robot Locomotion — Technical Report 2024."
+           style="background-image: url(files/projects/2024/nisslbeck-sample-efficient-locomotion.png);"></a>
+      </div>
+      <div class="row-text">
+        <span class="publication-title bold">
+          Insights into Sample-Efficient Learning of Quadrupedal Robot Locomotion
+        </span><br/>
+        <span class="bold">Tim Nisslbeck</span>, Wouter M Kouw<br/>
+        <span class="italic">Technical report</span>, 2024<br/>
+        <button class="desc-toggle" aria-expanded="false" aria-controls="desc-loco">
+          <span class="desc-toggle-label">more</span>
+        </button>
+        <div class="desc" id="desc-loco">
+          <div class="desc-body">
+            Reviews and empirically validates sample-efficiency principles for
+            RL-based quadruped locomotion — reward, action, and observation space
+            design; off-policy learning; model-based methods; and temporal update
+            strategies — using a simulated Petoi Bittle platform under controlled
+            conditions.
+          </div>
+        </div>
+        <div class="coming-soon">PDF coming soon</div>
+      </div>
+    </div>
+
+    <div class="publication row" id="nisslbeck2024coupled">
+      <div class="row-media">
+        <a class="lb-trigger"
+           data-src="files/projects/2024/nisslbeck-carxefe.avif"
+           data-caption="Coupled Autoregressive Active Inference Agents for Control of Multi-Joint Dynamical Systems — IWAI 2024."
+           style="background-image: url(files/projects/2024/nisslbeck-carxefe.avif);"></a>
+      </div>
+      <div class="row-text">
+        <a class="publication-title bold"
+           href="https://biaslab.org/publication/coupled-autoregressive-aif-multijoint-dynamical-system/">
+          Coupled Autoregressive Active Inference Agents for Control of Multi-Joint
+          Dynamical Systems
+        </a><br/>
+        <span class="bold">Tim Nisslbeck</span>, Wouter M Kouw<br/>
+        <span class="italic">
+          International Workshop on Active Inference
+          (<a href="https://iwaiworkshop.github.io">IWAI</a>)
+        </span>, 2024<br/>
+        <button class="desc-toggle" aria-expanded="false" aria-controls="desc-carxefe">
+          <span class="desc-toggle-label">more</span>
+        </button>
+        <div class="desc" id="desc-carxefe">
+          <div class="desc-body">
+            Introduces <a class="term-link" href="#background">CARX-EFE</a>
+            (Coupled AutoRegressive models with eXogenous inputs, controlled via
+            Expected Free Energy) — multiple scalar active inference agents that
+            share observation histories to jointly control multi-input
+            multi-output dynamical systems. On a double mass-spring-damper,
+            coupled agents achieve lower prediction error and better goal
+            alignment than independent per-joint agents.
+          </div>
+        </div>
+        <a class="btn btn-red" href="https://biaslab.org/pdf/iwai2024/2024_iwai_nisslbeck_carxefe.pdf">pdf</a> /
+        <a class="btn btn-green" href="https://github.com/biaslab/IWAI2024-CARXEFE">code</a> /
+        <a class="btn btn-dark" href="bibtex/nisslbeck2024coupled.txt">bibtex</a>
+      </div>
+    </div>
+
+    <div class="publication row" id="kontes2020high">
+      <div class="row-media">
+        <a class="lb-trigger"
+           data-src="files/projects/2020/kontes-av-deeprl.avif"
+           data-caption="High-Speed Collision Avoidance using Deep RL and Domain Randomization for Autonomous Vehicles — ITSC 2020."
+           style="background-image: url(files/projects/2020/kontes-av-deeprl.avif);"></a>
+      </div>
+      <div class="row-text">
+        <a class="publication-title bold"
+           href="https://ieeexplore.ieee.org/abstract/document/9294396">
+          High-Speed Collision Avoidance using Deep Reinforcement Learning
+          and Domain Randomization for Autonomous Vehicles
+        </a><br/>
+        Georgios D Kontes, Daniel D Scherer, <span class="bold">Tim Nisslbeck</span>,
+        Janina Fischer, Christopher Mutschler<br/>
+        <span class="italic">
+          IEEE Intelligent Transportation Systems Conference
+          (<a href="https://ieee-itsc.org">ITSC</a>)
+        </span>, 2020<br/>
+        <button class="desc-toggle" aria-expanded="false" aria-controls="desc-kontes">
+          <span class="desc-toggle-label">more</span>
+        </button>
+        <div class="desc" id="desc-kontes">
+          <div class="desc-body">
+            A co-authored study from my time at Fraunhofer IIS. A TD3 (Twin
+            Delayed DDPG) deep RL agent is trained in a high-fidelity simulator
+            to take over steering, acceleration, and braking and avoid a
+            stationary obstacle in a high-speed collision-avoidance scenario.
+            Domain randomisation over vehicle speed and obstacle distance is used
+            to support sim-to-real transfer: the randomised policy generalises
+            substantially better across unseen speed and distance configurations
+            than policies trained on a single fixed version of the task.
+          </div>
+        </div>
+        <a class="btn btn-red" href="https://ieeexplore.ieee.org/abstract/document/9294396">pdf</a> /
+        <a class="btn btn-dark" href="bibtex/kontes2020high.txt">bibtex</a>
+      </div>
+    </div>
+
+    <div class="publication row" id="rccar">
+      <div class="row-media">
+        <a class="lb-trigger"
+           data-src="files/projects/2018/master-thesis-slalom.avif"
+           data-caption="MSc thesis (2018): a DDQN agent trained entirely inside a learned LSTM world model transfers to a real RC car and successfully performs slalom manoeuvres."
+           style="background-image: url(files/projects/2018/master-thesis-slalom.avif);"></a>
+      </div>
+      <div class="row-text">
+        <span class="publication-title bold">
+          Learning a World Model for Sim-to-Real Deep Reinforcement Learning (MSc Thesis)
+        </span><br/>
+        <span class="bold">Tim Nisslbeck</span><br/>
+        <span class="italic">MSc thesis · Fraunhofer IIS</span>, 2018<br/>
+        <button class="desc-toggle" aria-expanded="false" aria-controls="desc-rccar">
+          <span class="desc-toggle-label">more</span>
+        </button>
+        <div class="desc" id="desc-rccar">
+          <div class="desc-body">
+            Real RC car motion-capture data was collected using an ART motion
+            capture system and fused with onboard IMU readings. An LSTM-based world
+            model was trained on this data to approximate the vehicle's
+            state-transition dynamics. A DDQN agent was then trained entirely inside
+            the learned simulator — without any interaction with the physical car —
+            and the resulting policy was successfully deployed on the real Tamiya
+            TT-02 RC car, performing slalom, figure-eight, and lane-following
+            manoeuvres.
+          </div>
+        </div>
+        <a class="btn btn-red" href="https://www.iis.fraunhofer.de/content/dam/iis/de/doc/lv/dataanalytics/Poster/Poster_ReinforcementLearningSIM2REAL.pdf">poster</a>
+        &nbsp;<span class="coming-soon">project page coming soon</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div>
+    <h2 class="noselect">Open Source</h2>
+    <p>Simulation environments, tools, and reproducible implementations.</p>
+
+    <div class="highlight publication row" id="bittle-pybullet">
+      <div class="row-media">
+        <a class="lb-trigger"
+           data-src="files/bittle-pybullet.avif"
+           data-caption="PyBullet physics simulation of the Petoi Bittle quadruped — URDF model, IMU and infrared sensor emulation, and a Gym-compatible step interface."
+           style="background-image: url(files/bittle-pybullet.avif);"></a>
+      </div>
+      <div class="row-text">
+        <a class="bold publication-title"
+           href="https://github.com/abpolym/bittle-pybullet">
+          PyBullet Simulation Environment for Petoi Bittle
+        </a><br/>
+        <span class="italic">Python, PyBullet</span><br/>
+        <button class="desc-toggle" aria-expanded="false" aria-controls="desc-pybullet">
+          <span class="desc-toggle-label">more</span>
+        </button>
+        <div class="desc" id="desc-pybullet">
+          <div class="desc-body">
+            A complete PyBullet physics simulation of the Petoi Bittle quadruped,
+            built from scratch to support active inference and RL experiments.
+            Includes URDF model, IMU and infrared sensor emulation, and a
+            Gym-compatible step interface.
+          </div>
+        </div>
+        <div class="coming-soon">code coming soon</div>
+      </div>
+    </div>
+
+    <!--
+    <div class="publication row" id="mitcheetah">
+      <div class="row-media">
+        <a class="lb-trigger"
+           data-src="files/cheetah-gym.png"
+           data-caption="OpenAI Gym interface for the MIT Mini Cheetah simulator."
+           style="background-image: url(files/cheetah-gym.png);"></a>
+      </div>
+      <div class="row-text">
+        <a class="bold publication-title"
+           href="https://github.com/abpolym/mit-cheetah-gym">
+          OpenAI Gym Interface for MIT Mini Cheetah
+        </a><br/>
+        <span class="italic">Python, C++</span><br/>
+        <a class="btn btn-green" href="https://github.com/abpolym/mit-cheetah-gym">code</a>
+      </div>
+    </div>
+    -->
+
+  </div>
+
+  <h2 class="noselect">Outside Research</h2>
+
+  <div class="publication row">
+    <div class="row-media">
+      <a class="lb-trigger"
+         data-src="files/birding.png"
+         data-caption="Bird photography and field recordings contributed to eBird and the Macaulay Library — Netherlands and Germany."
+         style="background-image: url(files/birding.png); background-size: cover;"></a>
+    </div>
+    <div class="row-text">
+      <a class="bold publication-title" href="files/birding.html">
+        Birding, Photography &amp; Field Recording
+      </a>
+      <button class="desc-toggle" aria-expanded="false" aria-controls="desc-birding">
+        <span class="desc-toggle-label">more</span>
+      </button>
+      <div class="desc" id="desc-birding">
+        <div class="desc-body">
+          I regularly go birding in the Netherlands and Germany and contribute
+          observations to eBird and photographs and audio recordings to the
+          Macaulay Library.
+        </div>
+      </div>
+      <div style="margin-top:6px;">
+        <a class="btn btn-orange" href="files/birding.html">gallery</a> /
+        <a class="btn btn-teal" href="https://search.macaulaylibrary.org/catalog?userId=USER5909431&sort=rating_rank_desc">Macaulay Library</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="publication row">
+    <div class="row-media">
+      <a class="lb-trigger"
+         data-src="files/chess.jpg"
+         data-caption="Chess — mostly Blitz (3+0)."
+         style="background-image: url(files/chess.jpg); background-size: cover;"></a>
+    </div>
+    <div class="row-text">
+      <span class="bold">Chess</span><br/>
+      I enjoy playing chess regularly, mostly Blitz (3+0).
+    </div>
+  </div>
+
+  <div id="contact" class="noselect">
+    <h2>Contact</h2>
+    <p>
+      Happy to hear about research collaborations, job opportunities, or
+      questions about my work. My email is
+      <span class="bold">hello</span> [at]
+      <span class="bold">timnisslbeck</span> .com
+    </p>
+  </div>
+
+</div>
+
+<div class="footer noselect">
+  <div class="footer-content">
+    &copy; 2026 Tim Nisslbeck.
+    Design based on <a href="https://github.com/nicklashansen/nicklashansen.github.io">Nicklas Hansen's template</a>.
+  </div>
+</div>
+
+</body>
+</html>

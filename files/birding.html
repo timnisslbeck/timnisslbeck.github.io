@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Tim Nisslbeck">
+<meta property="og:title" content="Birding — Tim Nisslbeck">
+<meta property="og:description" content="Bird observations, photography and audio recordings contributed to eBird and the Macaulay Library.">
+<meta property="og:url" content="https://www.timnisslbeck.com/files/birding.html">
+
+<title>Birding — Tim Nisslbeck</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="stylesheet" href="../style.css">
+
+<style>
+
+/* ── Hero ─────────────────────────────────────────────────────────── */
+.hero {
+    border-bottom: 1px solid #e5e5e5;
+    padding: 40px 0 32px;
+    margin-bottom: 0;
+}
+
+.hero-inner {
+    max-width: 860px;
+    margin: auto;
+    padding: 0 16px;
+}
+
+.back-link {
+    color: #777;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.hero-title {
+    margin-top: 16px;
+    margin-bottom: 8px;
+}
+
+.hero-subtitle {
+    color: #666;
+    max-width: 650px;
+    margin-bottom: 16px;
+    line-height: 1.5em;
+}
+
+/* ── Photo grid — masonry via CSS columns ─────────────────────────── */
+.photo-grid {
+    column-count: 3;
+    column-gap: 10px;
+    margin-top: 8px;
+}
+
+.photo-item {
+    break-inside: avoid;
+    position: relative;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    background: #f0f0f0;  /* placeholder colour while loading */
+}
+
+.photo-item img {
+    width: 100%;
+    display: block;
+    border-radius: 6px;
+    transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+/* Hover: slight zoom + darken to reveal label */
+.photo-item:hover img {
+    transform: scale(1.025);
+    filter: brightness(0.78);
+}
+
+/* Species label — hidden by default, revealed on hover */
+.photo-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 28px 10px 10px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.62));
+    color: #fff;
+    font-size: 12px;
+    line-height: 1.35;
+    border-radius: 0 0 6px 6px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.photo-item:hover .photo-label {
+    opacity: 1;
+}
+
+.photo-label .species-name {
+    font-weight: 600;
+    font-size: 13px;
+    display: block;
+}
+
+.photo-label .species-loc {
+    color: rgba(255,255,255,0.75);
+    font-size: 11px;
+}
+
+/* ── Lightbox ─────────────────────────────────────────────────────── */
+.lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0,0,0,0.92);
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+}
+
+.lightbox.open {
+    display: flex;
+}
+
+.lightbox-inner {
+    position: relative;
+    max-width: min(92vw, 1100px);
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.lightbox-inner img {
+    max-width: 100%;
+    max-height: calc(92vh - 52px);
+    border-radius: 4px;
+    object-fit: contain;
+    display: block;
+}
+
+.lightbox-caption {
+    color: rgba(255,255,255,0.8);
+    font-size: 13px;
+    margin-top: 12px;
+    text-align: center;
+    line-height: 1.4;
+}
+
+.lightbox-caption strong {
+    color: #fff;
+    font-weight: 600;
+}
+
+.lightbox-close {
+    position: fixed;
+    top: 18px;
+    right: 22px;
+    color: rgba(255,255,255,0.7);
+    font-size: 28px;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.15s;
+    background: none;
+    border: none;
+    padding: 4px;
+    z-index: 1001;
+}
+
+.lightbox-close:hover { color: #fff; }
+
+/* Prev / next arrows */
+.lightbox-prev,
+.lightbox-next {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255,255,255,0.6);
+    font-size: 36px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 12px;
+    transition: color 0.15s;
+    z-index: 1001;
+    user-select: none;
+}
+.lightbox-prev { left: 12px; }
+.lightbox-next { right: 12px; }
+.lightbox-prev:hover,
+.lightbox-next:hover { color: #fff; }
+
+/* ── Section headings inside content ─────────────────────────────── */
+.content h2 { margin-top: 40px; }
+.content h2:first-child { margin-top: 32px; }
+
+/* Stat pills */
+.stat-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 16px 0 0;
+}
+
+.stat-pill {
+    background: #f5f7f9;
+    border: 1px solid #e5e5e5;
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 13px;
+    color: #445;
+}
+
+.stat-pill strong {
+    color: #2c3c4c;
+    font-weight: 600;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────── */
+@media only screen and (max-width: 900px) {
+    .photo-grid { column-count: 2; }
+}
+
+@media only screen and (max-width: 500px) {
+    .photo-grid { column-count: 1; }
+    .lightbox-prev { left: 4px; }
+    .lightbox-next { right: 4px; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ── HERO ─────────────────────────────────────────────────────────────── -->
+<div class="hero">
+    <div class="hero-inner">
+
+        <a class="back-link" href="../index.html">
+            ← Back to homepage
+        </a>
+
+        <h1 class="hero-title">
+            Birding, Photography &amp; Field Recording
+        </h1>
+
+        <p class="hero-subtitle">
+            I regularly go birding in the Netherlands and Germany and contribute
+            observations to <a href="https://ebird.org">eBird</a> and
+            photographs and audio recordings to the
+            <a href="https://search.macaulaylibrary.org/catalog?userId=USER5909431&sort=rating_rank_desc">Macaulay Library</a>.
+            The hobby combines field observation, species identification,
+            photography, and biodiversity monitoring.
+        </p>
+
+        <div class="stat-row">
+            <span class="stat-pill"><strong>50+</strong> species photographed</span>
+            <span class="stat-pill"><strong>NL · DE</strong> primary patch</span>
+            <span class="stat-pill">eBird checklists · Macaulay media</span>
+        </div>
+
+        <div style="margin-top: 16px;">
+            <a class="btn"
+               href="https://search.macaulaylibrary.org/catalog?userId=USER5909431&sort=rating_rank_desc">
+                Macaulay Library
+            </a>
+            <a class="btn"
+               href="https://search.macaulaylibrary.org/catalog?userId=USER5909431&sort=rating_rank_desc&mediaType=photo">
+                Photos only
+            </a>
+            <a class="btn"
+               href="https://search.macaulaylibrary.org/catalog?userId=USER5909431&sort=rating_rank_desc&mediaType=audio">
+                Audio recordings
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<!-- ── MAIN CONTENT ─────────────────────────────────────────────────────── -->
+<div class="content">
+
+    <h2>Photo Gallery</h2>
+    <p style="color:#666; font-size:14px; margin-top: -8px;">
+        Hover over a photo to see the species. Click to open full size.
+    </p>
+
+    <div class="photo-grid" id="photoGrid">
+
+        <div class="photo-item" data-species="Canada Goose" data-loc="Netherlands">
+            <img src="birds/branta_canadensis.jpg" alt="Canada Goose" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Canada Goose</span>
+                <span class="species-loc">Netherlands</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Mute Swan" data-loc="Netherlands">
+            <img src="birds/cygnus_olor.jpg" alt="Mute Swan" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Mute Swan</span>
+                <span class="species-loc">Netherlands</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Ruddy Shelduck" data-loc="Netherlands">
+            <img src="birds/tadorna_ferruginea.jpg" alt="Ruddy Shelduck" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Ruddy Shelduck</span>
+                <span class="species-loc">Netherlands</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Wood Duck" data-loc="Netherlands · 2025">
+            <img src="birds/aix_sponsa.jpg" alt="Wood Duck" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Wood Duck</span>
+                <span class="species-loc">Netherlands · 2025</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Northern Shoveler" data-loc="Netherlands">
+            <img src="birds/spatula_clypeata.jpg" alt="Northern Shoveler" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Northern Shoveler</span>
+                <span class="species-loc">Netherlands</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Gadwall" data-loc="Netherlands">
+            <img src="birds/mareca_strepera.jpg" alt="Gadwall" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Gadwall</span>
+                <span class="species-loc">Netherlands</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Mallard" data-loc="Netherlands">
+            <img src="birds/anas_platyrhynchos.jpg" alt="Mallard" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Mallard</span>
+                <span class="species-loc">Netherlands</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Tufted Duck" data-loc="Netherlands">
+            <img src="birds/aythya_fuligula.jpg" alt="Tufted Duck" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Tufted Duck</span>
+                <span class="species-loc">Netherlands</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Ring-necked Pheasant" data-loc="Germany">
+            <img src="birds/phasianus_colchicus.jpg" alt="Ring-necked Pheasant" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Ring-necked Pheasant</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Rock Pigeon" data-loc="Germany">
+            <img src="birds/columba_livia.jpg" alt="Rock Pigeon" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Rock Pigeon</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Common Wood-Pigeon" data-loc="Germany">
+            <img src="birds/columba_palumbus.jpg" alt="Common Wood-Pigeon" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Common Wood-Pigeon</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Eurasian Collared-Dove" data-loc="Germany">
+            <img src="birds/streptopelia_decaocto.jpg" alt="Eurasian Collared-Dove" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Eurasian Collared-Dove</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Eurasian Moorhen" data-loc="Netherlands">
+            <img src="birds/gallinula_chloropus.jpg" alt="Eurasian Moorhen" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Eurasian Moorhen</span>
+                <span class="species-loc">Netherlands</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Eurasian Coot" data-loc="Netherlands">
+            <img src="birds/fulica_atra.jpg" alt="Eurasian Coot" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Eurasian Coot</span>
+                <span class="species-loc">Netherlands</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Common Snipe" data-loc="Netherlands">
+            <img src="birds/gallinago_gallinago.jpg" alt="Common Snipe" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Common Snipe</span>
+                <span class="species-loc">Netherlands</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Little Grebe" data-loc="Netherlands">
+            <img src="birds/tachybaptus_ruficollis.jpg" alt="Little Grebe" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Little Grebe</span>
+                <span class="species-loc">Netherlands</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Great Crested Grebe" data-loc="Netherlands">
+            <img src="birds/podiceps_cristatus.jpg" alt="Great Crested Grebe" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Great Crested Grebe</span>
+                <span class="species-loc">Netherlands</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="White Stork" data-loc="Netherlands">
+            <img src="birds/ciconia_ciconia.jpg" alt="White Stork" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">White Stork</span>
+                <span class="species-loc">Netherlands</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Great Cormorant" data-loc="Netherlands">
+            <img src="birds/phalacrocorax_carbo.jpg" alt="Great Cormorant" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Great Cormorant</span>
+                <span class="species-loc">Netherlands</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Eurasian Spoonbill" data-loc="Netherlands">
+            <img src="birds/platalea_leucorodia.jpg" alt="Eurasian Spoonbill" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Eurasian Spoonbill</span>
+                <span class="species-loc">Netherlands</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Great Egret" data-loc="Netherlands">
+            <img src="birds/ardea_alba.jpg" alt="Great Egret" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Great Egret</span>
+                <span class="species-loc">Netherlands</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Grey Heron" data-loc="Netherlands">
+            <img src="birds/ardea_cinerea.jpg" alt="Grey Heron" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Grey Heron</span>
+                <span class="species-loc">Netherlands</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Eurasian Sparrowhawk" data-loc="Germany">
+            <img src="birds/accipiter_nisus.jpg" alt="Eurasian Sparrowhawk" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Eurasian Sparrowhawk</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Red Kite" data-loc="Germany">
+            <img src="birds/milvus_milvus.jpg" alt="Red Kite" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Red Kite</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Common Buzzard" data-loc="Germany">
+            <img src="birds/buteo_buteo.jpg" alt="Common Buzzard" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Common Buzzard</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Long-eared Owl" data-loc="Germany · 2025">
+            <img src="birds/asio_otus.jpg" alt="Long-eared Owl" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Long-eared Owl</span>
+                <span class="species-loc">Germany · 2025</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Common Kingfisher" data-loc="Netherlands">
+            <img src="birds/alcedo_atthis.jpg" alt="Common Kingfisher" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Common Kingfisher</span>
+                <span class="species-loc">Netherlands</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Great Spotted Woodpecker" data-loc="Germany">
+            <img src="birds/dendrocopos_major.jpg" alt="Great Spotted Woodpecker" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Great Spotted Woodpecker</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Eurasian Green Woodpecker" data-loc="Germany">
+            <img src="birds/picus_viridis.jpg" alt="Eurasian Green Woodpecker" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Eurasian Green Woodpecker</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Eurasian Kestrel" data-loc="Germany">
+            <img src="birds/falco_tinnunculus.jpg" alt="Eurasian Kestrel" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Eurasian Kestrel</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Eurasian Hobby" data-loc="Germany">
+            <img src="birds/falco_subbuteo.jpg" alt="Eurasian Hobby" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Eurasian Hobby</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Rose-ringed Parakeet" data-loc="Germany">
+            <img src="birds/psittacula_krameri.jpg" alt="Rose-ringed Parakeet" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Rose-ringed Parakeet</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Eurasian Magpie" data-loc="Germany">
+            <img src="birds/pica_pica.jpg" alt="Eurasian Magpie" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Eurasian Magpie</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Eurasian Jackdaw" data-loc="Germany">
+            <img src="birds/coloeus_monedula.jpg" alt="Eurasian Jackdaw" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Eurasian Jackdaw</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Rook" data-loc="Germany">
+            <img src="birds/corvus_frugilegus.jpg" alt="Rook" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Rook</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Carrion Crow" data-loc="Germany">
+            <img src="birds/corvus_corone.jpg" alt="Carrion Crow" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Carrion Crow</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Eurasian Blue Tit" data-loc="Germany">
+            <img src="birds/cyanistes_caeruleus.jpg" alt="Eurasian Blue Tit" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Eurasian Blue Tit</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Great Tit" data-loc="Germany">
+            <img src="birds/parus_major.jpg" alt="Great Tit" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Great Tit</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Barn Swallow" data-loc="Germany">
+            <img src="birds/hirundo_rustica.jpg" alt="Barn Swallow" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Barn Swallow</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Long-tailed Tit" data-loc="Germany">
+            <img src="birds/aegithalos_caudatus.jpg" alt="Long-tailed Tit" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Long-tailed Tit</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Common Firecrest" data-loc="Germany">
+            <img src="birds/regulus_ignicapilla.jpg" alt="Common Firecrest" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Common Firecrest</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Eurasian Nuthatch" data-loc="Germany">
+            <img src="birds/sitta_europaea.jpg" alt="Eurasian Nuthatch" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Eurasian Nuthatch</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Short-toed Treecreeper" data-loc="Germany">
+            <img src="birds/certhia_brachydactyla.jpg" alt="Short-toed Treecreeper" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Short-toed Treecreeper</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="European Starling" data-loc="Germany">
+            <img src="birds/sturnus_vulgaris.jpg" alt="European Starling" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">European Starling</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Song Thrush" data-loc="Germany">
+            <img src="birds/turdus_philomelos.jpg" alt="Song Thrush" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Song Thrush</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Eurasian Blackbird" data-loc="Germany">
+            <img src="birds/turdus_merula.jpg" alt="Eurasian Blackbird" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Eurasian Blackbird</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="European Robin" data-loc="Germany">
+            <img src="birds/erithacus_rubecula.jpg" alt="European Robin" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">European Robin</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="European Pied Flycatcher" data-loc="Germany">
+            <img src="birds/ficedula_hypoleuca.jpg" alt="European Pied Flycatcher" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">European Pied Flycatcher</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Black Redstart" data-loc="Germany">
+            <img src="birds/phoenicurus_ochruros.jpg" alt="Black Redstart" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Black Redstart</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="White Wagtail" data-loc="Germany">
+            <img src="birds/motacilla_alba.jpg" alt="White Wagtail" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">White Wagtail</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+    </div><!-- /.photo-grid -->
+
+</div><!-- /.content -->
+
+<!-- ── LIGHTBOX ─────────────────────────────────────────────────────────── -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo lightbox">
+    <button class="lightbox-close" id="lbClose" aria-label="Close">&times;</button>
+    <button class="lightbox-prev" id="lbPrev" aria-label="Previous photo">&#8249;</button>
+    <button class="lightbox-next" id="lbNext" aria-label="Next photo">&#8250;</button>
+    <div class="lightbox-inner" id="lbInner">
+        <img id="lbImg" src="" alt="">
+        <div class="lightbox-caption" id="lbCaption"></div>
+    </div>
+</div>
+
+<!-- ── FOOTER ───────────────────────────────────────────────────────────── -->
+<div class="footer">
+    <div class="footer-content">
+        &copy; 2025 Tim Nisslbeck &nbsp;·&nbsp;
+        <a href="../index.html">timnisslbeck.com</a>
+    </div>
+</div>
+
+<script>
+(function () {
+    var items = Array.from(document.querySelectorAll('.photo-item'));
+    var lb    = document.getElementById('lightbox');
+    var lbImg = document.getElementById('lbImg');
+    var lbCap = document.getElementById('lbCaption');
+    var cur   = 0;
+
+    function open(idx) {
+        cur = idx;
+        var el      = items[idx];
+        var img     = el.querySelector('img');
+        var species = el.dataset.species;
+        var loc     = el.dataset.loc;
+        lbImg.src   = img.src;
+        lbImg.alt   = species;
+        lbCap.innerHTML = '<strong>' + species + '</strong> &nbsp;·&nbsp; ' + loc;
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function close() {
+        lb.classList.remove('open');
+        document.body.style.overflow = '';
+        lbImg.src = '';
+    }
+
+    function step(dir) {
+        cur = (cur + dir + items.length) % items.length;
+        var el      = items[cur];
+        var img     = el.querySelector('img');
+        var species = el.dataset.species;
+        var loc     = el.dataset.loc;
+        lbImg.src   = img.src;
+        lbImg.alt   = species;
+        lbCap.innerHTML = '<strong>' + species + '</strong> &nbsp;·&nbsp; ' + loc;
+    }
+
+    items.forEach(function (el, i) {
+        el.addEventListener('click', function () { open(i); });
+    });
+
+    document.getElementById('lbClose').addEventListener('click', close);
+    document.getElementById('lbPrev').addEventListener('click', function (e) {
+        e.stopPropagation(); step(-1);
+    });
+    document.getElementById('lbNext').addEventListener('click', function (e) {
+        e.stopPropagation(); step(1);
+    });
+
+    // Click backdrop to close (but not the image itself)
+    lb.addEventListener('click', function (e) {
+        if (e.target === lb) close();
+    });
+
+    // Keyboard: arrow keys + Escape
+    document.addEventListener('keydown', function (e) {
+        if (!lb.classList.contains('open')) return;
+        if (e.key === 'Escape')      close();
+        if (e.key === 'ArrowLeft')   step(-1);
+        if (e.key === 'ArrowRight')  step(1);
+    });
+})();
+</script>
+
+</body>
+</html>

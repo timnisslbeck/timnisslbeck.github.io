@@ -1,0 +1,10 @@
+@article{nisslbeck2025factor,
+  title={Factor graph-based online Bayesian identification and component evaluation for multivariate autoregressive exogenous input models},
+  author={Nisslbeck, Tim N and Kouw, Wouter M},
+  journal={Entropy},
+  volume={27},
+  number={7},
+  pages={679},
+  year={2025},
+  publisher={MDPI}
+}

@@ -1,0 +1,476 @@
+/* ===================================================================== */
+/* Theme tokens — light (default) and dark                               */
+/* ===================================================================== */
+
+:root {
+    --bg:           #fdfdfd;
+    --bg-nav:       rgba(253,253,253,0.88);
+    --bg-card:      #f7efd4;
+    --bg-card-h:    #f3e9c8;
+    --bg-pub-h:     #f5f7f9;
+    --border:       #e0e0e0;
+    --text:         #2c3c4c;
+    --text-dim:     #666;
+    --text-faint:   #999;
+    --heading:      #345;
+    --link:         #2471a3;
+    --link-h:       #f09228;
+    --btn-bg:       #eee;
+    --btn-bg-h:     #ddd;
+    --btn-text:     #2c3c4c;
+    --species-card: #fff;
+    --species-bdr:  #e5e5e5;
+    --stars-bg:     #f0f0f0;
+    --stars-bdr:    #d0d7de;
+}
+
+[data-theme="dark"] {
+    --bg:           #111827;
+    --bg-nav:       rgba(17,24,39,0.90);
+    --bg-card:      #1e2d1a;
+    --bg-card-h:    #253520;
+    --bg-pub-h:     #1a2030;
+    --border:       #2d3748;
+    --text:         #d1d5db;
+    --text-dim:     #9ca3af;
+    --text-faint:   #6b7280;
+    --heading:      #e5e7eb;
+    --link:         #60a5fa;
+    --link-h:       #f09228;
+    --btn-bg:       #374151;
+    --btn-bg-h:     #4b5563;
+    --btn-text:     #e5e7eb;
+    --species-card: #1f2937;
+    --species-bdr:  #374151;
+    --stars-bg:     #374151;
+    --stars-bdr:    #4b5563;
+}
+
+/* ===================================================================== */
+/* Base                                                                   */
+/* ===================================================================== */
+html {-webkit-text-size-adjust: 100%; text-size-adjust: 100%;}
+body {background-color: var(--bg); color: var(--text); margin: 0; font-size: 15px; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; transition: background-color 0.25s, color 0.25s;}
+h1 {margin-bottom: 32px; font-size: 2.4em;}
+h2 {margin-top: 48px; font-size: 1.6em;}
+h1, h2 {color: var(--heading);}
+* {font-weight: normal; font-family: Inter, system-ui, Roboto, 'Helvetica Neue', Helvetica, sans-serif;}
+a {color: var(--link); text-decoration: none; transition: color 0.2s;}
+a:focus, a:hover {color: var(--link-h);}
+p {line-height: 1.5em;}
+.noselect {-webkit-touch-callout: none; -webkit-user-select: none; user-select: none;}
+.bold {font-weight: bold;}
+.italic {font-style: italic;}
+
+/* ===================================================================== */
+/* Header                                                                 */
+/* ===================================================================== */
+.header {width: 100%; padding-top: 24px; padding-bottom: 0px;}
+.header-div {border-bottom: var(--border) 1px solid; padding-bottom: 20px; display: flex; align-items: flex-start;}
+.header-profile-picture {width: 120px; height: 120px; flex-shrink: 0; margin-right: 24px; border-radius: 50%; background-position: center; background-size: contain; background-repeat: no-repeat;}
+.header-name {display: flex; align-items: center; justify-content: space-between; gap: 12px;}
+.header-name h1 {margin-top: 10px; margin-bottom: 6px; line-height: 1.1;}
+.header-subtitle {margin-bottom: 10px;}
+.header-links-row {white-space: nowrap;}
+.header-links-separator {}
+
+/* ===================================================================== */
+/* Sticky nav                                                             */
+/* ===================================================================== */
+.sticky-nav {position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: var(--bg-nav); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); transform: translateY(-100%); transition: transform 0.3s ease, background-color 0.25s; font-size: 14px;}
+.sticky-nav.visible {transform: translateY(0);}
+.sticky-nav-content {max-width: 860px; margin: auto; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between;}
+.sticky-nav-name {color: var(--heading); font-size: 16px; text-decoration: none;}
+.sticky-nav-name:hover {color: var(--heading);}
+.sticky-nav-links {display: flex; gap: 16px; align-items: center;}
+.sticky-nav-links a {color: var(--link); text-decoration: none; transition: color 0.2s;}
+.sticky-nav-links a:hover {color: var(--link-h);}
+
+/* ===================================================================== */
+/* Theme toggle slider                                                    */
+/* ===================================================================== */
+.theme-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+}
+.theme-toggle-track {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 52px;
+    height: 26px;
+    border-radius: 13px;
+    background: var(--btn-bg);
+    border: 1px solid var(--border);
+    padding: 0 6px;
+    box-sizing: border-box;
+    transition: background 0.25s, border-color 0.2s;
+}
+.theme-toggle:hover .theme-toggle-track {border-color: var(--link-h);}
+.theme-toggle-icon {
+    font-size: 12px;
+    line-height: 1;
+    z-index: 1;
+    transition: opacity 0.2s;
+}
+.theme-toggle-sun {opacity: 1;}
+.theme-toggle-moon {opacity: 0.45;}
+.theme-toggle.is-dark .theme-toggle-sun {opacity: 0.45;}
+.theme-toggle.is-dark .theme-toggle-moon {opacity: 1;}
+.theme-toggle-knob {
+    position: absolute;
+    top: 50%;
+    left: 2px;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--bg);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    transition: left 0.22s ease, background 0.25s;
+}
+.theme-toggle.is-dark .theme-toggle-knob {left: calc(100% - 22px);}
+.theme-toggle-header {margin-top: 6px;}
+
+/* ===================================================================== */
+/* Anchor offset so sticky nav doesn't cover jump targets                 */
+/* ===================================================================== */
+.publication[id], #contact, #background {
+    scroll-margin-top: 64px;
+}
+
+/* ===================================================================== */
+/* Content layout                                                         */
+/* ===================================================================== */
+.content {max-width: 860px; padding-left: 16px; padding-right: 16px; margin: auto; margin-top: 48px;}
+
+/* ===================================================================== */
+/* Buttons                                                                */
+/* ===================================================================== */
+a.btn {
+    display: inline-block;
+    padding: 2px 8px;
+    background-color: var(--btn-bg);
+    color: var(--btn-text);
+    border-radius: 4px;
+    font-size: 12px;
+    transition: background-color 0.2s, color 0.2s;
+    white-space: nowrap;
+}
+a.btn:hover {background-color: var(--btn-bg-h); color: var(--btn-text);}
+
+.btn-orange {background-color: #f09228 !important; color: #fff !important;}
+.btn-orange:hover {background-color: #d07818 !important; color: #fff !important;}
+.btn-red {background-color: #c0392b !important; color: #fff !important;}
+.btn-red:hover {background-color: #a93226 !important; color: #fff !important;}
+.btn-dark {background-color: #34495e !important; color: #fff !important;}
+.btn-dark:hover {background-color: #2c3e50 !important; color: #fff !important;}
+.btn-green {background-color: #27ae60 !important; color: #fff !important;}
+.btn-green:hover {background-color: #1e8449 !important; color: #fff !important;}
+.btn-teal {background-color: #16a085 !important; color: #fff !important;}
+.btn-teal:hover {background-color: #0e6655 !important; color: #fff !important;}
+
+/* ===================================================================== */
+/* Publication / project rows                                             */
+/* ===================================================================== */
+.row {display: flex; align-items: flex-start; box-sizing: border-box;}
+.row-media {flex-shrink: 0; width: 200px; height: 112px; background-position: center; background-size: contain; background-repeat: no-repeat; position: relative;}
+.row-text {margin-left: 16px; line-height: 1.5em; min-width: 0;}
+.row-text span {line-height: inherit;}
+
+.publication {margin-bottom: 36px; padding: 8px; border-radius: 6px; transition: background-color 0.2s;}
+.publication:hover {background-color: var(--bg-pub-h);}
+.publication.highlight {background-color: var(--bg-card); width: 100%; border-radius: 6px;}
+.publication.highlight:hover {background-color: var(--bg-card-h);}
+
+.press {width: 100px; height: 80px; margin-right: 12px; background-size: cover;}
+
+/* ===================================================================== */
+/* Collapsible descriptions                                               */
+/* ===================================================================== */
+.desc-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 2px 0 0 0;
+    font-size: 12px;
+    color: var(--link);
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s;
+}
+.desc-toggle:hover {color: var(--link-h);}
+.desc-toggle::before {
+    content: '▶';
+    font-size: 8px;
+    transition: transform 0.18s;
+    display: inline-block;
+}
+.desc-toggle[aria-expanded="true"]::before {transform: rotate(90deg);}
+.desc {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.25s ease, margin 0.3s ease;
+    margin: 0;
+}
+.desc.open {
+    max-height: 600px;
+    opacity: 1;
+    margin: 6px 0 0 0;
+}
+.desc-body {font-size: 13.5px; line-height: 1.55; color: var(--text-dim);}
+.desc-keywords {margin-top: 8px; font-size: 12.5px; line-height: 1.5; color: var(--text-faint);}
+.desc-keywords a {font-size: 12.5px;}
+.term-link {
+    border-bottom: 1px dotted var(--link);
+    text-decoration: none;
+}
+.term-link:hover {border-bottom-color: var(--link-h);}
+
+/* ===================================================================== */
+/* Interest tiles                                                         */
+/* ===================================================================== */
+.interests {display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start;}
+.interest {width: 268px; max-width: 100%;}
+.interest-media {
+    cursor: zoom-in;
+    position: relative;
+    display: block;
+    width: 100%;
+    border-radius: 6px;
+    overflow: hidden;
+    line-height: 0;
+}
+.interest-media::after {
+    content: '⤢';
+    position: absolute;
+    top: 6px;
+    right: 7px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+    opacity: 0;
+    transition: opacity 0.18s;
+    pointer-events: none;
+    line-height: 1;
+}
+.interest-media:hover::after {opacity: 1;}
+.interest-text {max-width: 268px; margin-top: 8px;}
+
+/* ===================================================================== */
+/* Terminology dropdown                                                   */
+/* ===================================================================== */
+.terminology {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+}
+.terminology .desc.open {max-height: 1000px;}
+.terminology .desc.open,
+.terminology-body {
+    /* the body fills full width regardless of .interest sizing */
+}
+.terminology-body {
+    margin-top: 8px;
+    padding: 12px 16px 16px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 24px;
+}
+.term-entry {font-size: 13px; line-height: 1.5;}
+.term-name {font-weight: bold; color: var(--text);}
+.term-def {color: var(--text-dim);}
+
+/* ===================================================================== */
+/* Lightbox                                                               */
+/* ===================================================================== */
+.lb-trigger {
+    cursor: zoom-in;
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.lb-trigger::after {
+    content: '⤢';
+    position: absolute;
+    top: 6px;
+    right: 7px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+    opacity: 0;
+    transition: opacity 0.18s;
+    pointer-events: none;
+    line-height: 1;
+}
+.row-media:hover .lb-trigger::after {opacity: 1;}
+
+.lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0,0,0,0.88);
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+}
+.lightbox.open {display: flex;}
+.lightbox-inner {
+    position: relative;
+    max-width: min(90vw, 960px);
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: default;
+}
+.lightbox-inner img,
+.lightbox-inner video {
+    max-width: 100%;
+    max-height: calc(90vh - 52px);
+    border-radius: 5px;
+    display: block;
+    object-fit: contain;
+}
+.lightbox-caption {
+    color: rgba(255,255,255,0.75);
+    font-size: 13px;
+    margin-top: 12px;
+    text-align: center;
+    line-height: 1.45;
+    max-width: 640px;
+    padding: 0 8px;
+}
+.lightbox-close {
+    position: fixed;
+    top: 16px;
+    right: 20px;
+    color: rgba(255,255,255,0.65);
+    font-size: 30px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px 8px;
+    line-height: 1;
+    z-index: 1001;
+    transition: color 0.15s;
+}
+.lightbox-close:hover {color: #fff;}
+.lightbox-prev,
+.lightbox-next {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 38px;
+    color: rgba(255,255,255,0.5);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 12px;
+    z-index: 1001;
+    transition: color 0.15s;
+    user-select: none;
+    line-height: 1;
+}
+.lightbox-prev {left: 10px;}
+.lightbox-next {right: 10px;}
+.lightbox-prev:hover,
+.lightbox-next:hover {color: #fff;}
+
+/* ===================================================================== */
+/* Footer                                                                 */
+/* ===================================================================== */
+.footer {border-top: var(--border) 1px solid; width: 100%; max-width: 860px; margin: auto;}
+.footer-content {color: var(--text-faint); font-size: 12px; padding: 12px 0; max-width: 860px; margin: auto;}
+.footer-content a {color: var(--text-faint) !important; text-decoration: underline; transition: color 0.2s;}
+.footer-content a:hover {color: var(--text-dim) !important;}
+
+/* ===================================================================== */
+/* GitHub stars pill                                                      */
+/* ===================================================================== */
+.stars {font-size: 11px; display: inline-flex; align-items: center; gap: 4px; margin-left: 8px; color: var(--text-dim); background-color: var(--stars-bg); border: 1px solid var(--stars-bdr); border-radius: 12px; padding: 1px 8px; vertical-align: middle; line-height: 1.5;}
+.gh-icon {width: 13px; height: 13px; flex-shrink: 0;}
+
+/* ===================================================================== */
+/* Coming-soon placeholder                                                */
+/* ===================================================================== */
+.coming-soon {color: var(--text-faint); font-size: 12px;}
+
+/* ===================================================================== */
+/* Responsive                                                             */
+/* ===================================================================== */
+@media only screen and (max-width: 1150px) {
+    .header-div {flex-direction: column; align-items: center; text-align: center;}
+    .header-profile-picture {margin: 0 auto 12px auto; width: 150px; height: 150px;}
+    .header-name {flex-direction: column; gap: 4px;}
+    body {font-size: 18px;}
+    a.btn {font-size: 14px; padding: 2px 6px;}
+}
+
+@media only screen and (max-width: 1000px) {
+    .publication {margin-bottom: 46px;}
+    .publication.row {flex-direction: column; align-items: center;}
+    .publication .row-media {width: 100%; max-width: 400px; height: 158px; margin-bottom: 12px;}
+    .publication .row-text {width: 100%; margin-left: 0;}
+    .interests {flex-direction: column; align-items: center; gap: 24px;}
+    .interest {width: 100%; max-width: 400px;}
+    .interest-text {max-width: 400px;}
+    .header-links {display: flex; flex-direction: column; gap: 4px;}
+    .header-links-separator {display: none;}
+    .terminology-body {grid-template-columns: 1fr;}
+}
+
+@media only screen and (max-width: 600px) {
+    .press {width: 80px; height: 64px; margin-right: 8px;}
+    .sticky-nav-links {gap: 12px;}
+    .sticky-nav-name {font-size: 14px;}
+}
+
+/* Hover-to-expand descriptions for mouse users only (touch keeps click) */
+@media (hover: hover) and (pointer: fine) {
+    .publication:hover .desc,
+    .interest:hover .desc {
+        max-height: 600px;
+        opacity: 1;
+        margin: 6px 0 0 0;
+    }
+    .terminology:hover .desc {max-height: 1000px;}
+}
+
+/* ===================================================================== */
+/* Birding gallery page (birding.html)                                    */
+/* ===================================================================== */
+.photo-grid {column-count: 3; column-gap: 12px; margin-top: 24px;}
+.photo-grid img {width: 100%; display: block; margin-bottom: 12px; border-radius: 6px; break-inside: avoid;}
+.photo-grid img:hover {opacity: 0.95;}
+
+.species-grid {display: grid; grid-template-columns: repeat(auto-fill,minmax(320px,1fr)); gap: 16px; margin-top: 24px;}
+.species-card {border: 1px solid var(--species-bdr); border-radius: 8px; overflow: hidden; background: var(--species-card);}
+.species-card-image {width: 100%; height: 220px; background-size: cover; background-position: center;}
+.species-card-body {padding: 12px;}
+.species-name {font-weight: bold; margin-bottom: 4px;}
+.species-meta {color: var(--text-dim); font-size: 13px;}
+
+@media only screen and (max-width: 900px) {
+    .photo-grid {column-count: 2;}
+}
+@media only screen and (max-width: 600px) {
+    .photo-grid {column-count: 1;}
+}

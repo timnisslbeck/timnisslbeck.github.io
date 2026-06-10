@@ -1,0 +1,6 @@
+@inproceedings{van2025effects,
+  title={Effects of priors on epistemic uncertainty in autoregressive active inference},
+  author={van Pelt, EG and Nisslbeck, TN and Belt, Harm JW and van Sloun, RJG and Kouw, Wouter M},
+  booktitle={EurIPS Workshop on Epistemic Intelligence in Machine Learning},
+  year={2025}
+}

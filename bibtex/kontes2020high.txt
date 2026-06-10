@@ -1,0 +1,8 @@
+@inproceedings{kontes2020high,
+  title={High-speed collision avoidance using deep reinforcement learning and domain randomization for autonomous vehicles},
+  author={Kontes, Georgios D and Scherer, Daniel D and Nisslbeck, Tim and Fischer, Janina and Mutschler, Christopher},
+  booktitle={2020 IEEE 23rd international conference on Intelligent Transportation Systems (ITSC)},
+  pages={1--8},
+  year={2020},
+  organization={IEEE}
+}
