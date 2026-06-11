@@ -5,21 +5,36 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="Tim Nisslbeck">
+<meta name="description" content="Bird observations, photography and audio recordings by Tim Nisslbeck, contributed to eBird and the Macaulay Library across the Netherlands and Germany.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Tim Nisslbeck">
 <meta property="og:title" content="Birding — Tim Nisslbeck">
 <meta property="og:description" content="Bird observations, photography and audio recordings contributed to eBird and the Macaulay Library.">
-<meta property="og:url" content="https://www.timnisslbeck.com/files/birding.html">
+<meta property="og:url" content="https://timnisslbeck.com/files/birding.html">
+<link rel="canonical" href="https://timnisslbeck.com/files/birding.html">
 
 <title>Birding — Tim Nisslbeck</title>
 
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+<link rel="stylesheet" href="../style.css?v=2.6">
+
+<script>
+(function () {
+  var stored = localStorage.getItem("theme");
+  var prefer = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", stored || prefer);
+})();
+</script>
 
 <style>
 
 /* ── Hero ─────────────────────────────────────────────────────────── */
 .hero {
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid var(--border);
     padding: 40px 0 32px;
     margin-bottom: 0;
 }
@@ -31,7 +46,7 @@
 }
 
 .back-link {
-    color: #777;
+    color: var(--text-dim);
     font-size: 14px;
     display: inline-flex;
     align-items: center;
@@ -44,7 +59,7 @@
 }
 
 .hero-subtitle {
-    color: #666;
+    color: var(--text-dim);
     max-width: 650px;
     margin-bottom: 16px;
     line-height: 1.5em;
@@ -64,7 +79,7 @@
     border-radius: 6px;
     overflow: hidden;
     cursor: pointer;
-    background: #f0f0f0;  /* placeholder colour while loading */
+    background: var(--bg-pub-h);  /* placeholder colour while loading */
 }
 
 .photo-item img {
@@ -158,6 +173,17 @@
     font-weight: 600;
 }
 
+.lb-asset-link {
+    color: #f5a623;
+    text-decoration: none;
+    border-bottom: 1px dotted #f5a623;
+    white-space: nowrap;
+}
+.lb-asset-link:hover {
+    color: #ffb84d;
+    border-bottom-color: #ffb84d;
+}
+
 .lightbox-close {
     position: fixed;
     top: 18px;
@@ -209,16 +235,16 @@
 }
 
 .stat-pill {
-    background: #f5f7f9;
-    border: 1px solid #e5e5e5;
+    background: var(--bg-pub-h);
+    border: 1px solid var(--border);
     border-radius: 20px;
     padding: 5px 14px;
     font-size: 13px;
-    color: #445;
+    color: var(--text-dim);
 }
 
 .stat-pill strong {
-    color: #2c3c4c;
+    color: var(--text);
     font-weight: 600;
 }
 
@@ -241,9 +267,18 @@
 <div class="hero">
     <div class="hero-inner">
 
-        <a class="back-link" href="../index.html">
-            ← Back to homepage
-        </a>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+            <a class="back-link" href="../index.html">
+                ← Back to homepage
+            </a>
+            <button class="theme-toggle" role="switch" aria-checked="false" aria-label="Toggle dark/light mode">
+                <span class="theme-toggle-track">
+                    <span class="theme-toggle-icon theme-toggle-sun">☀</span>
+                    <span class="theme-toggle-icon theme-toggle-moon">🌙</span>
+                    <span class="theme-toggle-knob"></span>
+                </span>
+            </button>
+        </div>
 
         <h1 class="hero-title">
             Birding, Photography &amp; Field Recording
@@ -292,7 +327,7 @@
 
     <div class="photo-grid" id="photoGrid">
 
-        <div class="photo-item" data-species="Canada Goose" data-loc="Netherlands">
+        <div class="photo-item" data-species="Canada Goose" data-loc="Netherlands" data-asset="https://macaulaylibrary.org/asset/623760938">
             <img src="birds/branta_canadensis.jpg" alt="Canada Goose" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Canada Goose</span>
@@ -300,7 +335,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Mute Swan" data-loc="Netherlands">
+        <div class="photo-item" data-species="Mute Swan" data-loc="Netherlands" data-asset="https://macaulaylibrary.org/asset/623012039">
             <img src="birds/cygnus_olor.jpg" alt="Mute Swan" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Mute Swan</span>
@@ -308,23 +343,23 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Ruddy Shelduck" data-loc="Netherlands">
+        <div class="photo-item" data-species="Ruddy Shelduck" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623759797">
             <img src="birds/tadorna_ferruginea.jpg" alt="Ruddy Shelduck" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Ruddy Shelduck</span>
+                <span class="species-loc">Germany</span>
+            </div>
+        </div>
+
+        <div class="photo-item" data-species="Wood Duck" data-loc="Netherlands" data-asset="https://macaulaylibrary.org/asset/623762465">
+            <img src="birds/aix_sponsa.jpg" alt="Wood Duck" loading="lazy">
+            <div class="photo-label">
+                <span class="species-name">Wood Duck</span>
                 <span class="species-loc">Netherlands</span>
             </div>
         </div>
 
-        <div class="photo-item" data-species="Wood Duck" data-loc="Netherlands · 2025">
-            <img src="birds/aix_sponsa.jpg" alt="Wood Duck" loading="lazy">
-            <div class="photo-label">
-                <span class="species-name">Wood Duck</span>
-                <span class="species-loc">Netherlands · 2025</span>
-            </div>
-        </div>
-
-        <div class="photo-item" data-species="Northern Shoveler" data-loc="Netherlands">
+        <div class="photo-item" data-species="Northern Shoveler" data-loc="Netherlands" data-asset="https://macaulaylibrary.org/asset/623011801">
             <img src="birds/spatula_clypeata.jpg" alt="Northern Shoveler" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Northern Shoveler</span>
@@ -332,7 +367,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Gadwall" data-loc="Netherlands">
+        <div class="photo-item" data-species="Gadwall" data-loc="Netherlands" data-asset="https://macaulaylibrary.org/asset/623761289">
             <img src="birds/mareca_strepera.jpg" alt="Gadwall" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Gadwall</span>
@@ -340,23 +375,23 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Mallard" data-loc="Netherlands">
+        <div class="photo-item" data-species="Mallard" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/622909380">
             <img src="birds/anas_platyrhynchos.jpg" alt="Mallard" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Mallard</span>
-                <span class="species-loc">Netherlands</span>
+                <span class="species-loc">Germany</span>
             </div>
         </div>
 
-        <div class="photo-item" data-species="Tufted Duck" data-loc="Netherlands">
+        <div class="photo-item" data-species="Tufted Duck" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/622920155">
             <img src="birds/aythya_fuligula.jpg" alt="Tufted Duck" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Tufted Duck</span>
-                <span class="species-loc">Netherlands</span>
+                <span class="species-loc">Germany</span>
             </div>
         </div>
 
-        <div class="photo-item" data-species="Ring-necked Pheasant" data-loc="Germany">
+        <div class="photo-item" data-species="Ring-necked Pheasant" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624319680">
             <img src="birds/phasianus_colchicus.jpg" alt="Ring-necked Pheasant" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Ring-necked Pheasant</span>
@@ -364,7 +399,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Rock Pigeon" data-loc="Germany">
+        <div class="photo-item" data-species="Rock Pigeon" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624320048">
             <img src="birds/columba_livia.jpg" alt="Rock Pigeon" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Rock Pigeon</span>
@@ -372,7 +407,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Common Wood-Pigeon" data-loc="Germany">
+        <div class="photo-item" data-species="Common Wood-Pigeon" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623758277">
             <img src="birds/columba_palumbus.jpg" alt="Common Wood-Pigeon" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Common Wood-Pigeon</span>
@@ -380,7 +415,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Eurasian Collared-Dove" data-loc="Germany">
+        <div class="photo-item" data-species="Eurasian Collared-Dove" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624319976">
             <img src="birds/streptopelia_decaocto.jpg" alt="Eurasian Collared-Dove" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Eurasian Collared-Dove</span>
@@ -388,15 +423,15 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Eurasian Moorhen" data-loc="Netherlands">
+        <div class="photo-item" data-species="Eurasian Moorhen" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/622909696">
             <img src="birds/gallinula_chloropus.jpg" alt="Eurasian Moorhen" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Eurasian Moorhen</span>
-                <span class="species-loc">Netherlands</span>
+                <span class="species-loc">Germany</span>
             </div>
         </div>
 
-        <div class="photo-item" data-species="Eurasian Coot" data-loc="Netherlands">
+        <div class="photo-item" data-species="Eurasian Coot" data-loc="Netherlands" data-asset="https://macaulaylibrary.org/asset/623761214">
             <img src="birds/fulica_atra.jpg" alt="Eurasian Coot" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Eurasian Coot</span>
@@ -404,23 +439,23 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Common Snipe" data-loc="Netherlands">
+        <div class="photo-item" data-species="Common Snipe" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623099014">
             <img src="birds/gallinago_gallinago.jpg" alt="Common Snipe" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Common Snipe</span>
-                <span class="species-loc">Netherlands</span>
+                <span class="species-loc">Germany</span>
             </div>
         </div>
 
-        <div class="photo-item" data-species="Little Grebe" data-loc="Netherlands">
+        <div class="photo-item" data-species="Little Grebe" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/622910083">
             <img src="birds/tachybaptus_ruficollis.jpg" alt="Little Grebe" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Little Grebe</span>
-                <span class="species-loc">Netherlands</span>
+                <span class="species-loc">Germany</span>
             </div>
         </div>
 
-        <div class="photo-item" data-species="Great Crested Grebe" data-loc="Netherlands">
+        <div class="photo-item" data-species="Great Crested Grebe" data-loc="Netherlands" data-asset="https://macaulaylibrary.org/asset/623761647">
             <img src="birds/podiceps_cristatus.jpg" alt="Great Crested Grebe" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Great Crested Grebe</span>
@@ -428,15 +463,15 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="White Stork" data-loc="Netherlands">
+        <div class="photo-item" data-species="White Stork" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/622920030">
             <img src="birds/ciconia_ciconia.jpg" alt="White Stork" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">White Stork</span>
-                <span class="species-loc">Netherlands</span>
+                <span class="species-loc">Germany</span>
             </div>
         </div>
 
-        <div class="photo-item" data-species="Great Cormorant" data-loc="Netherlands">
+        <div class="photo-item" data-species="Great Cormorant" data-loc="Netherlands" data-asset="https://macaulaylibrary.org/asset/623012531">
             <img src="birds/phalacrocorax_carbo.jpg" alt="Great Cormorant" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Great Cormorant</span>
@@ -444,31 +479,31 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Eurasian Spoonbill" data-loc="Netherlands">
+        <div class="photo-item" data-species="Eurasian Spoonbill" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/622919975">
             <img src="birds/platalea_leucorodia.jpg" alt="Eurasian Spoonbill" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Eurasian Spoonbill</span>
-                <span class="species-loc">Netherlands</span>
+                <span class="species-loc">Germany</span>
             </div>
         </div>
 
-        <div class="photo-item" data-species="Great Egret" data-loc="Netherlands">
+        <div class="photo-item" data-species="Great Egret" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/622919749">
             <img src="birds/ardea_alba.jpg" alt="Great Egret" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Great Egret</span>
-                <span class="species-loc">Netherlands</span>
+                <span class="species-loc">Germany</span>
             </div>
         </div>
 
-        <div class="photo-item" data-species="Grey Heron" data-loc="Netherlands">
+        <div class="photo-item" data-species="Grey Heron" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623759430">
             <img src="birds/ardea_cinerea.jpg" alt="Grey Heron" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Grey Heron</span>
-                <span class="species-loc">Netherlands</span>
+                <span class="species-loc">Germany</span>
             </div>
         </div>
 
-        <div class="photo-item" data-species="Eurasian Sparrowhawk" data-loc="Germany">
+        <div class="photo-item" data-species="Eurasian Sparrowhawk" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623758623">
             <img src="birds/accipiter_nisus.jpg" alt="Eurasian Sparrowhawk" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Eurasian Sparrowhawk</span>
@@ -476,7 +511,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Red Kite" data-loc="Germany">
+        <div class="photo-item" data-species="Red Kite" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624342207">
             <img src="birds/milvus_milvus.jpg" alt="Red Kite" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Red Kite</span>
@@ -484,7 +519,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Common Buzzard" data-loc="Germany">
+        <div class="photo-item" data-species="Common Buzzard" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623764562">
             <img src="birds/buteo_buteo.jpg" alt="Common Buzzard" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Common Buzzard</span>
@@ -492,23 +527,23 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Long-eared Owl" data-loc="Germany · 2025">
+        <div class="photo-item" data-species="Long-eared Owl" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/620931101">
             <img src="birds/asio_otus.jpg" alt="Long-eared Owl" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Long-eared Owl</span>
-                <span class="species-loc">Germany · 2025</span>
+                <span class="species-loc">Germany</span>
             </div>
         </div>
 
-        <div class="photo-item" data-species="Common Kingfisher" data-loc="Netherlands">
+        <div class="photo-item" data-species="Common Kingfisher" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/622919560">
             <img src="birds/alcedo_atthis.jpg" alt="Common Kingfisher" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Common Kingfisher</span>
-                <span class="species-loc">Netherlands</span>
+                <span class="species-loc">Germany</span>
             </div>
         </div>
 
-        <div class="photo-item" data-species="Great Spotted Woodpecker" data-loc="Germany">
+        <div class="photo-item" data-species="Great Spotted Woodpecker" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624341830">
             <img src="birds/dendrocopos_major.jpg" alt="Great Spotted Woodpecker" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Great Spotted Woodpecker</span>
@@ -516,7 +551,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Eurasian Green Woodpecker" data-loc="Germany">
+        <div class="photo-item" data-species="Eurasian Green Woodpecker" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/620931145">
             <img src="birds/picus_viridis.jpg" alt="Eurasian Green Woodpecker" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Eurasian Green Woodpecker</span>
@@ -524,7 +559,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Eurasian Kestrel" data-loc="Germany">
+        <div class="photo-item" data-species="Eurasian Kestrel" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/622973912">
             <img src="birds/falco_tinnunculus.jpg" alt="Eurasian Kestrel" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Eurasian Kestrel</span>
@@ -532,7 +567,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Eurasian Hobby" data-loc="Germany">
+        <div class="photo-item" data-species="Eurasian Hobby" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624341679">
             <img src="birds/falco_subbuteo.jpg" alt="Eurasian Hobby" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Eurasian Hobby</span>
@@ -540,7 +575,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Rose-ringed Parakeet" data-loc="Germany">
+        <div class="photo-item" data-species="Rose-ringed Parakeet" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/622909291">
             <img src="birds/psittacula_krameri.jpg" alt="Rose-ringed Parakeet" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Rose-ringed Parakeet</span>
@@ -548,7 +583,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Eurasian Magpie" data-loc="Germany">
+        <div class="photo-item" data-species="Eurasian Magpie" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624319875">
             <img src="birds/pica_pica.jpg" alt="Eurasian Magpie" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Eurasian Magpie</span>
@@ -556,7 +591,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Eurasian Jackdaw" data-loc="Germany">
+        <div class="photo-item" data-species="Eurasian Jackdaw" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624317854">
             <img src="birds/coloeus_monedula.jpg" alt="Eurasian Jackdaw" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Eurasian Jackdaw</span>
@@ -564,7 +599,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Rook" data-loc="Germany">
+        <div class="photo-item" data-species="Rook" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624341989">
             <img src="birds/corvus_frugilegus.jpg" alt="Rook" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Rook</span>
@@ -572,7 +607,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Carrion Crow" data-loc="Germany">
+        <div class="photo-item" data-species="Carrion Crow" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623758949">
             <img src="birds/corvus_corone.jpg" alt="Carrion Crow" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Carrion Crow</span>
@@ -580,7 +615,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Eurasian Blue Tit" data-loc="Germany">
+        <div class="photo-item" data-species="Eurasian Blue Tit" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624342130">
             <img src="birds/cyanistes_caeruleus.jpg" alt="Eurasian Blue Tit" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Eurasian Blue Tit</span>
@@ -588,7 +623,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Great Tit" data-loc="Germany">
+        <div class="photo-item" data-species="Great Tit" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624316181">
             <img src="birds/parus_major.jpg" alt="Great Tit" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Great Tit</span>
@@ -596,7 +631,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Barn Swallow" data-loc="Germany">
+        <div class="photo-item" data-species="Barn Swallow" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/622920297">
             <img src="birds/hirundo_rustica.jpg" alt="Barn Swallow" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Barn Swallow</span>
@@ -604,7 +639,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Long-tailed Tit" data-loc="Germany">
+        <div class="photo-item" data-species="Long-tailed Tit" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623009005">
             <img src="birds/aegithalos_caudatus.jpg" alt="Long-tailed Tit" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Long-tailed Tit</span>
@@ -612,7 +647,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Common Firecrest" data-loc="Germany">
+        <div class="photo-item" data-species="Common Firecrest" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623009393">
             <img src="birds/regulus_ignicapilla.jpg" alt="Common Firecrest" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Common Firecrest</span>
@@ -620,7 +655,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Eurasian Nuthatch" data-loc="Germany">
+        <div class="photo-item" data-species="Eurasian Nuthatch" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/622973517">
             <img src="birds/sitta_europaea.jpg" alt="Eurasian Nuthatch" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Eurasian Nuthatch</span>
@@ -628,7 +663,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Short-toed Treecreeper" data-loc="Germany">
+        <div class="photo-item" data-species="Short-toed Treecreeper" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624316270">
             <img src="birds/certhia_brachydactyla.jpg" alt="Short-toed Treecreeper" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Short-toed Treecreeper</span>
@@ -636,7 +671,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="European Starling" data-loc="Germany">
+        <div class="photo-item" data-species="European Starling" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624341794">
             <img src="birds/sturnus_vulgaris.jpg" alt="European Starling" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">European Starling</span>
@@ -644,7 +679,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Song Thrush" data-loc="Germany">
+        <div class="photo-item" data-species="Song Thrush" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624316935">
             <img src="birds/turdus_philomelos.jpg" alt="Song Thrush" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Song Thrush</span>
@@ -652,7 +687,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Eurasian Blackbird" data-loc="Germany">
+        <div class="photo-item" data-species="Eurasian Blackbird" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/622973462">
             <img src="birds/turdus_merula.jpg" alt="Eurasian Blackbird" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Eurasian Blackbird</span>
@@ -660,7 +695,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="European Robin" data-loc="Germany">
+        <div class="photo-item" data-species="European Robin" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623758450">
             <img src="birds/erithacus_rubecula.jpg" alt="European Robin" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">European Robin</span>
@@ -668,7 +703,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="European Pied Flycatcher" data-loc="Germany">
+        <div class="photo-item" data-species="European Pied Flycatcher" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/622974436">
             <img src="birds/ficedula_hypoleuca.jpg" alt="European Pied Flycatcher" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">European Pied Flycatcher</span>
@@ -676,7 +711,7 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Black Redstart" data-loc="Germany">
+        <div class="photo-item" data-species="Black Redstart" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623764475">
             <img src="birds/phoenicurus_ochruros.jpg" alt="Black Redstart" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">Black Redstart</span>
@@ -684,11 +719,11 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="White Wagtail" data-loc="Germany">
+        <div class="photo-item" data-species="White Wagtail" data-loc="Netherlands" data-asset="https://macaulaylibrary.org/asset/623762293">
             <img src="birds/motacilla_alba.jpg" alt="White Wagtail" loading="lazy">
             <div class="photo-label">
                 <span class="species-name">White Wagtail</span>
-                <span class="species-loc">Germany</span>
+                <span class="species-loc">Netherlands</span>
             </div>
         </div>
 
@@ -710,7 +745,7 @@
 <!-- ── FOOTER ───────────────────────────────────────────────────────────── -->
 <div class="footer">
     <div class="footer-content">
-        &copy; 2025 Tim Nisslbeck &nbsp;·&nbsp;
+        &copy; 2026 Tim Nisslbeck &nbsp;·&nbsp;
         <a href="../index.html">timnisslbeck.com</a>
     </div>
 </div>
@@ -723,15 +758,29 @@
     var lbCap = document.getElementById('lbCaption');
     var cur   = 0;
 
-    function open(idx) {
-        cur = idx;
-        var el      = items[idx];
-        var img     = el.querySelector('img');
+    function renderCaption(el) {
         var species = el.dataset.species;
         var loc     = el.dataset.loc;
-        lbImg.src   = img.src;
-        lbImg.alt   = species;
-        lbCap.innerHTML = '<strong>' + species + '</strong> &nbsp;·&nbsp; ' + loc;
+        var asset   = el.dataset.asset;
+        var html = '<strong>' + species + '</strong> &nbsp;·&nbsp; ' + loc;
+        if (asset && asset.indexOf('REPLACE_ME') === -1) {
+            html += ' &nbsp;·&nbsp; <a class="lb-asset-link" href="' + asset +
+                    '" target="_blank" rel="noopener">View on Macaulay Library ↗</a>';
+        }
+        return html;
+    }
+
+    function show(idx) {
+        cur = idx;
+        var el  = items[idx];
+        var img = el.querySelector('img');
+        lbImg.src = img.src;
+        lbImg.alt = el.dataset.species;
+        lbCap.innerHTML = renderCaption(el);
+    }
+
+    function open(idx) {
+        show(idx);
         lb.classList.add('open');
         document.body.style.overflow = 'hidden';
     }
@@ -743,14 +792,7 @@
     }
 
     function step(dir) {
-        cur = (cur + dir + items.length) % items.length;
-        var el      = items[cur];
-        var img     = el.querySelector('img');
-        var species = el.dataset.species;
-        var loc     = el.dataset.loc;
-        lbImg.src   = img.src;
-        lbImg.alt   = species;
-        lbCap.innerHTML = '<strong>' + species + '</strong> &nbsp;·&nbsp; ' + loc;
+        show((cur + dir + items.length) % items.length);
     }
 
     items.forEach(function (el, i) {
@@ -776,6 +818,27 @@
         if (e.key === 'Escape')      close();
         if (e.key === 'ArrowLeft')   step(-1);
         if (e.key === 'ArrowRight')  step(1);
+    });
+
+    // Theme toggle (shared behaviour with the homepage)
+    function getTheme() { return document.documentElement.getAttribute('data-theme'); }
+    function syncToggles() {
+        var isDark = getTheme() === 'dark';
+        document.querySelectorAll('.theme-toggle').forEach(function (b) {
+            b.classList.toggle('is-dark', isDark);
+            b.setAttribute('aria-checked', isDark ? 'true' : 'false');
+        });
+    }
+    function setTheme(t) {
+        document.documentElement.setAttribute('data-theme', t);
+        localStorage.setItem('theme', t);
+        syncToggles();
+    }
+    syncToggles();
+    document.querySelectorAll('.theme-toggle').forEach(function (b) {
+        b.addEventListener('click', function () {
+            setTheme(getTheme() === 'dark' ? 'light' : 'dark');
+        });
     });
 })();
 </script>
