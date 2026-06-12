@@ -248,6 +248,101 @@
     font-weight: 600;
 }
 
+/* ── Spectrogram audio players ────────────────────────────────────── */
+.recordings {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.spectro-player {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--bg-pub-h);
+}
+
+/* Header row: play button + species/meta */
+.spectro-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+}
+
+.spectro-play {
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: var(--link);
+    color: #fff;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+.spectro-play:hover { background: var(--link-h); }
+
+.spectro-meta { min-width: 0; line-height: 1.3; }
+.spectro-name { font-weight: 600; font-size: 14px; color: var(--text); }
+.spectro-sub  { font-size: 12px; color: var(--text-dim); }
+.spectro-sub a { color: var(--text-dim); text-decoration: underline; }
+.spectro-sub a:hover { color: var(--link-h); }
+
+/* The spectrogram image + playhead overlay */
+.spectro-figure {
+    position: relative;
+    cursor: pointer;
+    line-height: 0;
+    background: #1a1a1a;  /* dark backdrop in case image is transparent */
+}
+.spectro-figure img {
+    width: 100%;
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Vertical playhead line */
+.spectro-playhead {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 2px;
+    background: #f5a623;
+    box-shadow: 0 0 4px rgba(245,166,35,0.9);
+    pointer-events: none;
+    transform: translateX(0);
+    will-change: transform;
+}
+
+/* Dim the part of the spectrogram not yet played */
+.spectro-progress {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: rgba(0,0,0,0.35);
+    pointer-events: none;
+}
+
+/* Time readout */
+.spectro-time {
+    padding: 6px 12px 10px;
+    font-size: 11px;
+    color: var(--text-dim);
+    font-variant-numeric: tabular-nums;
+    display: flex;
+    justify-content: space-between;
+}
+
 /* ── Responsive ───────────────────────────────────────────────────── */
 @media only screen and (max-width: 900px) {
     .photo-grid { column-count: 2; }
@@ -257,6 +352,7 @@
     .photo-grid { column-count: 1; }
     .lightbox-prev { left: 4px; }
     .lightbox-next { right: 4px; }
+    .recordings { grid-template-columns: 1fr; }
 }
 
 </style>
@@ -729,6 +825,383 @@
 
     </div><!-- /.photo-grid -->
 
+    <h2>Field Recordings</h2>
+    <p style="color:var(--text-dim); font-size:14px; margin-top:-8px;">
+        Press play, or click anywhere on a spectrogram to jump to that moment.
+    </p>
+
+    <div class="recordings" id="recordings">
+
+        <div class="spectro-player"
+             data-audio="birds/audio/anser_anser.mp3"
+             data-spectrogram="birds/audio/anser_anser.png"
+             data-species="Graylag Goose"
+             data-sub="England · 2024"
+             data-asset="https://macaulaylibrary.org/asset/624356177">
+            <div class="spectro-head">
+                <button class="spectro-play" aria-label="Play recording">▶</button>
+                <div class="spectro-meta">
+                    <div class="spectro-name">Graylag Goose</div>
+                    <div class="spectro-sub">England · 2024 ·
+                        <a href="https://macaulaylibrary.org/asset/624356177" target="_blank" rel="noopener">ML624356177 ↗</a>
+                    </div>
+                </div>
+            </div>
+            <div class="spectro-figure">
+                <img src="birds/audio/anser_anser.png" alt="Spectrogram of Graylag Goose call" loading="lazy">
+                <div class="spectro-progress"></div>
+                <div class="spectro-playhead"></div>
+            </div>
+            <div class="spectro-time"><span class="spectro-cur">0:00</span><span class="spectro-dur">0:00</span></div>
+        </div>
+
+        <div class="spectro-player"
+             data-audio="birds/audio/anas_platyrhynchos.mp3"
+             data-spectrogram="birds/audio/anas_platyrhynchos.png"
+             data-species="Mallard"
+             data-sub="England · 2024"
+             data-asset="https://macaulaylibrary.org/asset/624356177">
+            <div class="spectro-head">
+                <button class="spectro-play" aria-label="Play recording">▶</button>
+                <div class="spectro-meta">
+                    <div class="spectro-name">Mallard</div>
+                    <div class="spectro-sub">England · 2024 ·
+                        <a href="https://macaulaylibrary.org/asset/624356177" target="_blank" rel="noopener">ML624356177 ↗</a>
+                    </div>
+                </div>
+            </div>
+            <div class="spectro-figure">
+                <img src="birds/audio/anas_platyrhynchos.png" alt="Spectrogram" loading="lazy">
+                <div class="spectro-progress"></div>
+                <div class="spectro-playhead"></div>
+            </div>
+            <div class="spectro-time"><span class="spectro-cur">0:00</span><span class="spectro-dur">0:00</span></div>
+        </div>
+
+        <div class="spectro-player"
+             data-audio="birds/audio/columba_palumbus.mp3"
+             data-spectrogram="birds/audio/columba_palumbus.png"
+             data-species="Common Wood-Pigeon"
+             data-sub="Germany · 2024"
+             data-asset="https://macaulaylibrary.org/asset/624357833">
+            <div class="spectro-head">
+                <button class="spectro-play" aria-label="Play recording">▶</button>
+                <div class="spectro-meta">
+                    <div class="spectro-name">Common Wood-Pigeon</div>
+                    <div class="spectro-sub">Germany · 2024 ·
+                        <a href="https://macaulaylibrary.org/asset/624357833" target="_blank" rel="noopener">ML624357833 ↗</a>
+                    </div>
+                </div>
+            </div>
+            <div class="spectro-figure">
+                <img src="birds/audio/columba_palumbus.png" alt="Spectrogram" loading="lazy">
+                <div class="spectro-progress"></div>
+                <div class="spectro-playhead"></div>
+            </div>
+            <div class="spectro-time"><span class="spectro-cur">0:00</span><span class="spectro-dur">0:00</span></div>
+        </div>
+
+        <div class="spectro-player"
+             data-audio="birds/audio/fulica_atra.mp3"
+             data-spectrogram="birds/audio/fulica_atra.png"
+             data-species="Eurasian Coot"
+             data-sub="Germany · 2024"
+             data-asset="https://macaulaylibrary.org/asset/624363449">
+            <div class="spectro-head">
+                <button class="spectro-play" aria-label="Play recording">▶</button>
+                <div class="spectro-meta">
+                    <div class="spectro-name">Eurasian Coot</div>
+                    <div class="spectro-sub">Germany · 2024 ·
+                        <a href="https://macaulaylibrary.org/asset/624363449" target="_blank" rel="noopener">ML624363449 ↗</a>
+                    </div>
+                </div>
+            </div>
+            <div class="spectro-figure">
+                <img src="birds/audio/fulica_atra.png" alt="Spectrogram" loading="lazy">
+                <div class="spectro-progress"></div>
+                <div class="spectro-playhead"></div>
+            </div>
+            <div class="spectro-time"><span class="spectro-cur">0:00</span><span class="spectro-dur">0:00</span></div>
+        </div>
+
+        <div class="spectro-player"
+             data-audio="birds/audio/podiceps_cristatus.mp3"
+             data-spectrogram="birds/audio/podiceps_cristatus.png"
+             data-species="Great Crested Grebe"
+             data-sub="Netherlands · 2024"
+             data-asset="https://macaulaylibrary.org/asset/624354839">
+            <div class="spectro-head">
+                <button class="spectro-play" aria-label="Play recording">▶</button>
+                <div class="spectro-meta">
+                    <div class="spectro-name">Great Crested Grebe</div>
+                    <div class="spectro-sub">Netherlands · 2024 ·
+                        <a href="https://macaulaylibrary.org/asset/624354839" target="_blank" rel="noopener">ML624354839 ↗</a>
+                    </div>
+                </div>
+            </div>
+            <div class="spectro-figure">
+                <img src="birds/audio/podiceps_cristatus.png" alt="Spectrogram" loading="lazy">
+                <div class="spectro-progress"></div>
+                <div class="spectro-playhead"></div>
+            </div>
+            <div class="spectro-time"><span class="spectro-cur">0:00</span><span class="spectro-dur">0:00</span></div>
+        </div>
+
+        <div class="spectro-player"
+             data-audio="birds/audio/ardea_cinerea.mp3"
+             data-spectrogram="birds/audio/ardea_cinerea.png"
+             data-species="Gray Heron"
+             data-sub="Netherlands · 2024"
+             data-asset="https://macaulaylibrary.org/asset/624354842">
+            <div class="spectro-head">
+                <button class="spectro-play" aria-label="Play recording">▶</button>
+                <div class="spectro-meta">
+                    <div class="spectro-name">Gray Heron</div>
+                    <div class="spectro-sub">Netherlands · 2024 ·
+                        <a href="https://macaulaylibrary.org/asset/624354842" target="_blank" rel="noopener">ML624354842 ↗</a>
+                    </div>
+                </div>
+            </div>
+            <div class="spectro-figure">
+                <img src="birds/audio/ardea_cinerea.png" alt="Spectrogram" loading="lazy">
+                <div class="spectro-progress"></div>
+                <div class="spectro-playhead"></div>
+            </div>
+            <div class="spectro-time"><span class="spectro-cur">0:00</span><span class="spectro-dur">0:00</span></div>
+        </div>
+
+        <div class="spectro-player"
+             data-audio="birds/audio/buteo_buteo.mp3"
+             data-spectrogram="birds/audio/buteo_buteo.png"
+             data-species="Common Buzzard"
+             data-sub="Germany · 2024"
+             data-asset="https://macaulaylibrary.org/asset/624356955">
+            <div class="spectro-head">
+                <button class="spectro-play" aria-label="Play recording">▶</button>
+                <div class="spectro-meta">
+                    <div class="spectro-name">Common Buzzard</div>
+                    <div class="spectro-sub">Germany · 2024 ·
+                        <a href="https://macaulaylibrary.org/asset/624356955" target="_blank" rel="noopener">ML624356955 ↗</a>
+                    </div>
+                </div>
+            </div>
+            <div class="spectro-figure">
+                <img src="birds/audio/buteo_buteo.png" alt="Spectrogram" loading="lazy">
+                <div class="spectro-progress"></div>
+                <div class="spectro-playhead"></div>
+            </div>
+            <div class="spectro-time"><span class="spectro-cur">0:00</span><span class="spectro-dur">0:00</span></div>
+        </div>
+
+        <div class="spectro-player"
+             data-audio="birds/audio/dendrocopos_major.mp3"
+             data-spectrogram="birds/audio/dendrocopos_major.png"
+             data-species="Great Spotted Woodpecker"
+             data-sub="Germany · 2024"
+             data-asset="https://macaulaylibrary.org/asset/624359039">
+            <div class="spectro-head">
+                <button class="spectro-play" aria-label="Play recording">▶</button>
+                <div class="spectro-meta">
+                    <div class="spectro-name">Great Spotted Woodpecker</div>
+                    <div class="spectro-sub">Germany · 2024 ·
+                        <a href="https://macaulaylibrary.org/asset/624359039" target="_blank" rel="noopener">ML624359039 ↗</a>
+                    </div>
+                </div>
+            </div>
+            <div class="spectro-figure">
+                <img src="birds/audio/dendrocopos_major.png" alt="Spectrogram" loading="lazy">
+                <div class="spectro-progress"></div>
+                <div class="spectro-playhead"></div>
+            </div>
+            <div class="spectro-time"><span class="spectro-cur">0:00</span><span class="spectro-dur">0:00</span></div>
+        </div>
+
+        <div class="spectro-player"
+             data-audio="birds/audio/falco_tinnunculus.mp3"
+             data-spectrogram="birds/audio/falco_tinnunculus.png"
+             data-species="Eurasian Kestrel"
+             data-sub="Germany · 2024"
+             data-asset="https://macaulaylibrary.org/asset/620931163">
+            <div class="spectro-head">
+                <button class="spectro-play" aria-label="Play recording">▶</button>
+                <div class="spectro-meta">
+                    <div class="spectro-name">Eurasian Kestrel</div>
+                    <div class="spectro-sub">Germany · 2024 ·
+                        <a href="https://macaulaylibrary.org/asset/620931163" target="_blank" rel="noopener">ML620931163 ↗</a>
+                    </div>
+                </div>
+            </div>
+            <div class="spectro-figure">
+                <img src="birds/audio/falco_tinnunculus.png" alt="Spectrogram" loading="lazy">
+                <div class="spectro-progress"></div>
+                <div class="spectro-playhead"></div>
+            </div>
+            <div class="spectro-time"><span class="spectro-cur">0:00</span><span class="spectro-dur">0:00</span></div>
+        </div>
+
+        <div class="spectro-player"
+             data-audio="birds/audio/garrulus_glandarius.mp3"
+             data-spectrogram="birds/audio/garrulus_glandarius.png"
+             data-species="Eurasian Jay"
+             data-sub="Germany · 2024"
+             data-asset="https://macaulaylibrary.org/asset/624360176">
+            <div class="spectro-head">
+                <button class="spectro-play" aria-label="Play recording">▶</button>
+                <div class="spectro-meta">
+                    <div class="spectro-name">Eurasian Jay</div>
+                    <div class="spectro-sub">Germany · 2024 ·
+                        <a href="https://macaulaylibrary.org/asset/624360176" target="_blank" rel="noopener">ML624360176 ↗</a>
+                    </div>
+                </div>
+            </div>
+            <div class="spectro-figure">
+                <img src="birds/audio/garrulus_glandarius.png" alt="Spectrogram" loading="lazy">
+                <div class="spectro-progress"></div>
+                <div class="spectro-playhead"></div>
+            </div>
+            <div class="spectro-time"><span class="spectro-cur">0:00</span><span class="spectro-dur">0:00</span></div>
+        </div>
+
+        <div class="spectro-player"
+             data-audio="birds/audio/pica_pica.mp3"
+             data-spectrogram="birds/audio/pica_pica.png"
+             data-species="Eurasian Magpie"
+             data-sub="Germany · 2024"
+             data-asset="https://macaulaylibrary.org/asset/624355565">
+            <div class="spectro-head">
+                <button class="spectro-play" aria-label="Play recording">▶</button>
+                <div class="spectro-meta">
+                    <div class="spectro-name">Eurasian Magpie</div>
+                    <div class="spectro-sub">Germany · 2024 ·
+                        <a href="https://macaulaylibrary.org/asset/624355565" target="_blank" rel="noopener">ML624355565 ↗</a>
+                    </div>
+                </div>
+            </div>
+            <div class="spectro-figure">
+                <img src="birds/audio/pica_pica.png" alt="Spectrogram" loading="lazy">
+                <div class="spectro-progress"></div>
+                <div class="spectro-playhead"></div>
+            </div>
+            <div class="spectro-time"><span class="spectro-cur">0:00</span><span class="spectro-dur">0:00</span></div>
+        </div>
+
+        <div class="spectro-player"
+             data-audio="birds/audio/coloeus_monedula.mp3"
+             data-spectrogram="birds/audio/coloeus_monedula.png"
+             data-species="Eurasian Jackdaw"
+             data-sub="Germany · 2024"
+             data-asset="https://macaulaylibrary.org/asset/624361412">
+            <div class="spectro-head">
+                <button class="spectro-play" aria-label="Play recording">▶</button>
+                <div class="spectro-meta">
+                    <div class="spectro-name">Eurasian Jackdaw</div>
+                    <div class="spectro-sub">Germany · 2024 ·
+                        <a href="https://macaulaylibrary.org/asset/624361412" target="_blank" rel="noopener">ML624361412 ↗</a>
+                    </div>
+                </div>
+            </div>
+            <div class="spectro-figure">
+                <img src="birds/audio/coloeus_monedula.png" alt="Spectrogram" loading="lazy">
+                <div class="spectro-progress"></div>
+                <div class="spectro-playhead"></div>
+            </div>
+            <div class="spectro-time"><span class="spectro-cur">0:00</span><span class="spectro-dur">0:00</span></div>
+        </div>
+
+        <div class="spectro-player"
+             data-audio="birds/audio/corvus_corone.mp3"
+             data-spectrogram="birds/audio/corvus_corone.png"
+             data-species="Carrion Crow"
+             data-sub="England · 2024"
+             data-asset="https://macaulaylibrary.org/asset/624356186">
+            <div class="spectro-head">
+                <button class="spectro-play" aria-label="Play recording">▶</button>
+                <div class="spectro-meta">
+                    <div class="spectro-name">Carrion Crow</div>
+                    <div class="spectro-sub">England · 2024 ·
+                        <a href="https://macaulaylibrary.org/asset/624356186" target="_blank" rel="noopener">ML624356186 ↗</a>
+                    </div>
+                </div>
+            </div>
+            <div class="spectro-figure">
+                <img src="birds/audio/corvus_corone.png" alt="Spectrogram" loading="lazy">
+                <div class="spectro-progress"></div>
+                <div class="spectro-playhead"></div>
+            </div>
+            <div class="spectro-time"><span class="spectro-cur">0:00</span><span class="spectro-dur">0:00</span></div>
+        </div>
+
+        <div class="spectro-player"
+             data-audio="birds/audio/poecile_palustris.mp3"
+             data-spectrogram="birds/audio/poecile_palustris.png"
+             data-species="Marsh Tit"
+             data-sub="England · 2024"
+             data-asset="https://macaulaylibrary.org/asset/624359021">
+            <div class="spectro-head">
+                <button class="spectro-play" aria-label="Play recording">▶</button>
+                <div class="spectro-meta">
+                    <div class="spectro-name">Marsh Tit</div>
+                    <div class="spectro-sub">England · 2024 ·
+                        <a href="https://macaulaylibrary.org/asset/624359021" target="_blank" rel="noopener">ML624359021 ↗</a>
+                    </div>
+                </div>
+            </div>
+            <div class="spectro-figure">
+                <img src="birds/audio/poecile_palustris.png" alt="Spectrogram" loading="lazy">
+                <div class="spectro-progress"></div>
+                <div class="spectro-playhead"></div>
+            </div>
+            <div class="spectro-time"><span class="spectro-cur">0:00</span><span class="spectro-dur">0:00</span></div>
+        </div>
+
+        <div class="spectro-player"
+             data-audio="birds/audio/cyanistes_caeruleus.mp3"
+             data-spectrogram="birds/audio/cyanistes_caeruleus.png"
+             data-species="Eurasian Blue Tit"
+             data-sub="Germany · 2024"
+             data-asset="https://macaulaylibrary.org/asset/624360699">
+            <div class="spectro-head">
+                <button class="spectro-play" aria-label="Play recording">▶</button>
+                <div class="spectro-meta">
+                    <div class="spectro-name">Eurasian Blue Tit</div>
+                    <div class="spectro-sub">Germany · 2024 ·
+                        <a href="https://macaulaylibrary.org/asset/624360699" target="_blank" rel="noopener">ML624360699 ↗</a>
+                    </div>
+                </div>
+            </div>
+            <div class="spectro-figure">
+                <img src="birds/audio/cyanistes_caeruleus.png" alt="Spectrogram" loading="lazy">
+                <div class="spectro-progress"></div>
+                <div class="spectro-playhead"></div>
+            </div>
+            <div class="spectro-time"><span class="spectro-cur">0:00</span><span class="spectro-dur">0:00</span></div>
+        </div>
+
+        <div class="spectro-player"
+             data-audio="birds/audio/parus_major.mp3"
+             data-spectrogram="birds/audio/parus_major.png"
+             data-species="Great Tit"
+             data-sub="Netherlands · 2024"
+             data-asset="https://macaulaylibrary.org/asset/624359285">
+            <div class="spectro-head">
+                <button class="spectro-play" aria-label="Play recording">▶</button>
+                <div class="spectro-meta">
+                    <div class="spectro-name">Great Tit</div>
+                    <div class="spectro-sub">Netherlands · 2024 ·
+                        <a href="https://macaulaylibrary.org/asset/624359285" target="_blank" rel="noopener">ML624359285 ↗</a>
+                    </div>
+                </div>
+            </div>
+            <div class="spectro-figure">
+                <img src="birds/audio/parus_major.png" alt="Spectrogram" loading="lazy">
+                <div class="spectro-progress"></div>
+                <div class="spectro-playhead"></div>
+            </div>
+            <div class="spectro-time"><span class="spectro-cur">0:00</span><span class="spectro-dur">0:00</span></div>
+        </div>
+
+    </div><!-- /.recordings -->
+
 </div><!-- /.content -->
 
 <!-- ── LIGHTBOX ─────────────────────────────────────────────────────────── -->
@@ -839,6 +1312,93 @@
         b.addEventListener('click', function () {
             setTheme(getTheme() === 'dark' ? 'light' : 'dark');
         });
+    });
+
+    /* ── Spectrogram audio players ──────────────────────────────────── */
+    var players = Array.from(document.querySelectorAll('.spectro-player'));
+    var audios  = [];
+
+    function fmt(t) {
+        if (!isFinite(t) || t < 0) t = 0;
+        var m = Math.floor(t / 60);
+        var s = Math.floor(t % 60);
+        return m + ':' + (s < 10 ? '0' : '') + s;
+    }
+
+    players.forEach(function (player) {
+        var src      = player.dataset.audio;
+        var btn      = player.querySelector('.spectro-play');
+        var figure   = player.querySelector('.spectro-figure');
+        var playhead = player.querySelector('.spectro-playhead');
+        var progress = player.querySelector('.spectro-progress');
+        var curEl    = player.querySelector('.spectro-cur');
+        var durEl    = player.querySelector('.spectro-dur');
+
+        var audio = new Audio();
+        audio.preload = 'metadata';
+        audio.src = src;
+        audios.push(audio);
+
+        var raf = null;
+
+        function paint() {
+            var dur = audio.duration || 0;
+            var frac = dur ? (audio.currentTime / dur) : 0;
+            if (frac > 1) frac = 1;
+            var w = figure.clientWidth;
+            playhead.style.transform = 'translateX(' + (frac * w) + 'px)';
+            // progress overlay dims the *unplayed* (right) portion
+            progress.style.left = (frac * 100) + '%';
+            curEl.textContent = fmt(audio.currentTime);
+        }
+
+        function loop() {
+            paint();
+            if (!audio.paused) raf = requestAnimationFrame(loop);
+        }
+
+        audio.addEventListener('loadedmetadata', function () {
+            durEl.textContent = fmt(audio.duration);
+            paint();
+        });
+
+        audio.addEventListener('play', function () {
+            // pause every other player
+            audios.forEach(function (a) { if (a !== audio) a.pause(); });
+            btn.textContent = '❚❚';
+            loop();
+        });
+
+        audio.addEventListener('pause', function () {
+            btn.textContent = '▶';
+            if (raf) cancelAnimationFrame(raf);
+            paint();
+        });
+
+        audio.addEventListener('ended', function () {
+            btn.textContent = '▶';
+            audio.currentTime = 0;
+            paint();
+        });
+
+        btn.addEventListener('click', function () {
+            if (audio.paused) audio.play(); else audio.pause();
+        });
+
+        // Click (or drag) on the spectrogram to seek
+        function seekFromEvent(e) {
+            var rect = figure.getBoundingClientRect();
+            var x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+            var frac = Math.min(Math.max(x / rect.width, 0), 1);
+            if (audio.duration) {
+                audio.currentTime = frac * audio.duration;
+                paint();
+            }
+        }
+        figure.addEventListener('click', seekFromEvent);
+
+        // Repaint playhead position on resize (width changes)
+        window.addEventListener('resize', paint);
     });
 })();
 </script>
