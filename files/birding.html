@@ -248,6 +248,40 @@
     font-weight: 600;
 }
 
+/* ── Photo "has audio" badge ──────────────────────────────────────── */
+.photo-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(245,166,35,0.92);
+    color: #1a1a1a;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    pointer-events: none;
+}
+
+/* Embedded player inside the photo lightbox */
+.lb-audio {
+    width: 100%;
+    max-width: 560px;
+    margin-top: 12px;
+}
+.lb-audio .spectro-player {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.18);
+}
+.lb-audio .spectro-name { color: #fff; }
+.lb-audio .spectro-sub  { color: rgba(255,255,255,0.7); }
+.lb-audio .spectro-sub a { color: rgba(255,255,255,0.7); }
+.lb-audio .spectro-time { color: rgba(255,255,255,0.6); }
+
 /* ── Spectrogram audio players ────────────────────────────────────── */
 .recordings {
     display: grid;
@@ -417,8 +451,10 @@
 <div class="content">
 
     <h2>Photo Gallery</h2>
-    <p style="color:#666; font-size:14px; margin-top: -8px;">
-        Hover over a photo to see the species. Click to open full size.
+    <p style="color:var(--text-dim); font-size:14px; margin-top: -8px;">
+        Hover over a photo to see the species. Click to open full size —
+        a <span style="color:#f09228;">♪</span> badge means a recording is
+        included in the enlarged view.
     </p>
 
     <div class="photo-grid" id="photoGrid">
@@ -471,8 +507,9 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Mallard" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/622909380">
+        <div class="photo-item" data-species="Mallard" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/622909380" data-audio="birds/audio/anas_platyrhynchos.mp3" data-spectrogram="birds/audio/anas_platyrhynchos.png" data-rec-asset="https://macaulaylibrary.org/asset/624356177" data-sub="England · 2024">
             <img src="birds/anas_platyrhynchos.jpg" alt="Mallard" loading="lazy">
+            <div class="photo-badge" aria-hidden="true">♪</div>
             <div class="photo-label">
                 <span class="species-name">Mallard</span>
                 <span class="species-loc">Germany</span>
@@ -503,8 +540,9 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Common Wood-Pigeon" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623758277">
+        <div class="photo-item" data-species="Common Wood-Pigeon" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623758277" data-audio="birds/audio/columba_palumbus.mp3" data-spectrogram="birds/audio/columba_palumbus.png" data-rec-asset="https://macaulaylibrary.org/asset/624357833" data-sub="Germany · 2024">
             <img src="birds/columba_palumbus.jpg" alt="Common Wood-Pigeon" loading="lazy">
+            <div class="photo-badge" aria-hidden="true">♪</div>
             <div class="photo-label">
                 <span class="species-name">Common Wood-Pigeon</span>
                 <span class="species-loc">Germany</span>
@@ -527,8 +565,9 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Eurasian Coot" data-loc="Netherlands" data-asset="https://macaulaylibrary.org/asset/623761214">
+        <div class="photo-item" data-species="Eurasian Coot" data-loc="Netherlands" data-asset="https://macaulaylibrary.org/asset/623761214" data-audio="birds/audio/fulica_atra.mp3" data-spectrogram="birds/audio/fulica_atra.png" data-rec-asset="https://macaulaylibrary.org/asset/624363449" data-sub="Germany · 2024">
             <img src="birds/fulica_atra.jpg" alt="Eurasian Coot" loading="lazy">
+            <div class="photo-badge" aria-hidden="true">♪</div>
             <div class="photo-label">
                 <span class="species-name">Eurasian Coot</span>
                 <span class="species-loc">Netherlands</span>
@@ -551,8 +590,9 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Great Crested Grebe" data-loc="Netherlands" data-asset="https://macaulaylibrary.org/asset/623761647">
+        <div class="photo-item" data-species="Great Crested Grebe" data-loc="Netherlands" data-asset="https://macaulaylibrary.org/asset/623761647" data-audio="birds/audio/podiceps_cristatus.mp3" data-spectrogram="birds/audio/podiceps_cristatus.png" data-rec-asset="https://macaulaylibrary.org/asset/624354839" data-sub="Netherlands · 2024">
             <img src="birds/podiceps_cristatus.jpg" alt="Great Crested Grebe" loading="lazy">
+            <div class="photo-badge" aria-hidden="true">♪</div>
             <div class="photo-label">
                 <span class="species-name">Great Crested Grebe</span>
                 <span class="species-loc">Netherlands</span>
@@ -591,8 +631,9 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Grey Heron" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623759430">
+        <div class="photo-item" data-species="Grey Heron" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623759430" data-audio="birds/audio/ardea_cinerea.mp3" data-spectrogram="birds/audio/ardea_cinerea.png" data-rec-asset="https://macaulaylibrary.org/asset/624354842" data-sub="Netherlands · 2024">
             <img src="birds/ardea_cinerea.jpg" alt="Grey Heron" loading="lazy">
+            <div class="photo-badge" aria-hidden="true">♪</div>
             <div class="photo-label">
                 <span class="species-name">Grey Heron</span>
                 <span class="species-loc">Germany</span>
@@ -615,8 +656,9 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Common Buzzard" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623764562">
+        <div class="photo-item" data-species="Common Buzzard" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623764562" data-audio="birds/audio/buteo_buteo.mp3" data-spectrogram="birds/audio/buteo_buteo.png" data-rec-asset="https://macaulaylibrary.org/asset/624356955" data-sub="Germany · 2024">
             <img src="birds/buteo_buteo.jpg" alt="Common Buzzard" loading="lazy">
+            <div class="photo-badge" aria-hidden="true">♪</div>
             <div class="photo-label">
                 <span class="species-name">Common Buzzard</span>
                 <span class="species-loc">Germany</span>
@@ -639,8 +681,9 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Great Spotted Woodpecker" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624341830">
+        <div class="photo-item" data-species="Great Spotted Woodpecker" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624341830" data-audio="birds/audio/dendrocopos_major.mp3" data-spectrogram="birds/audio/dendrocopos_major.png" data-rec-asset="https://macaulaylibrary.org/asset/624359039" data-sub="Germany · 2024">
             <img src="birds/dendrocopos_major.jpg" alt="Great Spotted Woodpecker" loading="lazy">
+            <div class="photo-badge" aria-hidden="true">♪</div>
             <div class="photo-label">
                 <span class="species-name">Great Spotted Woodpecker</span>
                 <span class="species-loc">Germany</span>
@@ -655,8 +698,9 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Eurasian Kestrel" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/622973912">
+        <div class="photo-item" data-species="Eurasian Kestrel" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/622973912" data-audio="birds/audio/falco_tinnunculus.mp3" data-spectrogram="birds/audio/falco_tinnunculus.png" data-rec-asset="https://macaulaylibrary.org/asset/620931163" data-sub="Germany · 2024">
             <img src="birds/falco_tinnunculus.jpg" alt="Eurasian Kestrel" loading="lazy">
+            <div class="photo-badge" aria-hidden="true">♪</div>
             <div class="photo-label">
                 <span class="species-name">Eurasian Kestrel</span>
                 <span class="species-loc">Germany</span>
@@ -679,16 +723,18 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Eurasian Magpie" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624319875">
+        <div class="photo-item" data-species="Eurasian Magpie" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624319875" data-audio="birds/audio/pica_pica.mp3" data-spectrogram="birds/audio/pica_pica.png" data-rec-asset="https://macaulaylibrary.org/asset/624355565" data-sub="Germany · 2024">
             <img src="birds/pica_pica.jpg" alt="Eurasian Magpie" loading="lazy">
+            <div class="photo-badge" aria-hidden="true">♪</div>
             <div class="photo-label">
                 <span class="species-name">Eurasian Magpie</span>
                 <span class="species-loc">Germany</span>
             </div>
         </div>
 
-        <div class="photo-item" data-species="Eurasian Jackdaw" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624317854">
+        <div class="photo-item" data-species="Eurasian Jackdaw" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624317854" data-audio="birds/audio/coloeus_monedula.mp3" data-spectrogram="birds/audio/coloeus_monedula.png" data-rec-asset="https://macaulaylibrary.org/asset/624361412" data-sub="Germany · 2024">
             <img src="birds/coloeus_monedula.jpg" alt="Eurasian Jackdaw" loading="lazy">
+            <div class="photo-badge" aria-hidden="true">♪</div>
             <div class="photo-label">
                 <span class="species-name">Eurasian Jackdaw</span>
                 <span class="species-loc">Germany</span>
@@ -703,24 +749,27 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Carrion Crow" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623758949">
+        <div class="photo-item" data-species="Carrion Crow" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623758949" data-audio="birds/audio/corvus_corone.mp3" data-spectrogram="birds/audio/corvus_corone.png" data-rec-asset="https://macaulaylibrary.org/asset/624356186" data-sub="England · 2024">
             <img src="birds/corvus_corone.jpg" alt="Carrion Crow" loading="lazy">
+            <div class="photo-badge" aria-hidden="true">♪</div>
             <div class="photo-label">
                 <span class="species-name">Carrion Crow</span>
                 <span class="species-loc">Germany</span>
             </div>
         </div>
 
-        <div class="photo-item" data-species="Eurasian Blue Tit" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624342130">
+        <div class="photo-item" data-species="Eurasian Blue Tit" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624342130" data-audio="birds/audio/cyanistes_caeruleus.mp3" data-spectrogram="birds/audio/cyanistes_caeruleus.png" data-rec-asset="https://macaulaylibrary.org/asset/624360699" data-sub="Germany · 2024">
             <img src="birds/cyanistes_caeruleus.jpg" alt="Eurasian Blue Tit" loading="lazy">
+            <div class="photo-badge" aria-hidden="true">♪</div>
             <div class="photo-label">
                 <span class="species-name">Eurasian Blue Tit</span>
                 <span class="species-loc">Germany</span>
             </div>
         </div>
 
-        <div class="photo-item" data-species="Great Tit" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624316181">
+        <div class="photo-item" data-species="Great Tit" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624316181" data-audio="birds/audio/parus_major.mp3" data-spectrogram="birds/audio/parus_major.png" data-rec-asset="https://macaulaylibrary.org/asset/624359285" data-sub="Netherlands · 2024">
             <img src="birds/parus_major.jpg" alt="Great Tit" loading="lazy">
+            <div class="photo-badge" aria-hidden="true">♪</div>
             <div class="photo-label">
                 <span class="species-name">Great Tit</span>
                 <span class="species-loc">Germany</span>
@@ -735,32 +784,36 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Long-tailed Tit" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623009005">
+        <div class="photo-item" data-species="Long-tailed Tit" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623009005" data-audio="birds/audio/aegithalos_caudatus.mp3" data-spectrogram="birds/audio/aegithalos_caudatus.png" data-rec-asset="https://macaulaylibrary.org/asset/624362015" data-sub="Germany · 2024">
             <img src="birds/aegithalos_caudatus.jpg" alt="Long-tailed Tit" loading="lazy">
+            <div class="photo-badge" aria-hidden="true">♪</div>
             <div class="photo-label">
                 <span class="species-name">Long-tailed Tit</span>
                 <span class="species-loc">Germany</span>
             </div>
         </div>
 
-        <div class="photo-item" data-species="Common Firecrest" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623009393">
+        <div class="photo-item" data-species="Common Firecrest" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623009393" data-audio="birds/audio/regulus_ignicapilla.mp3" data-spectrogram="birds/audio/regulus_ignicapilla.png" data-rec-asset="https://macaulaylibrary.org/asset/624360689" data-sub="Germany · 2024">
             <img src="birds/regulus_ignicapilla.jpg" alt="Common Firecrest" loading="lazy">
+            <div class="photo-badge" aria-hidden="true">♪</div>
             <div class="photo-label">
                 <span class="species-name">Common Firecrest</span>
                 <span class="species-loc">Germany</span>
             </div>
         </div>
 
-        <div class="photo-item" data-species="Eurasian Nuthatch" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/622973517">
+        <div class="photo-item" data-species="Eurasian Nuthatch" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/622973517" data-audio="birds/audio/sitta_europaea.mp3" data-spectrogram="birds/audio/sitta_europaea.png" data-rec-asset="https://macaulaylibrary.org/asset/624358974" data-sub="Germany · 2024">
             <img src="birds/sitta_europaea.jpg" alt="Eurasian Nuthatch" loading="lazy">
+            <div class="photo-badge" aria-hidden="true">♪</div>
             <div class="photo-label">
                 <span class="species-name">Eurasian Nuthatch</span>
                 <span class="species-loc">Germany</span>
             </div>
         </div>
 
-        <div class="photo-item" data-species="Short-toed Treecreeper" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624316270">
+        <div class="photo-item" data-species="Short-toed Treecreeper" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/624316270" data-audio="birds/audio/certhia_brachydactyla.mp3" data-spectrogram="birds/audio/certhia_brachydactyla.png" data-rec-asset="https://macaulaylibrary.org/asset/624360683" data-sub="Germany · 2024">
             <img src="birds/certhia_brachydactyla.jpg" alt="Short-toed Treecreeper" loading="lazy">
+            <div class="photo-badge" aria-hidden="true">♪</div>
             <div class="photo-label">
                 <span class="species-name">Short-toed Treecreeper</span>
                 <span class="species-loc">Germany</span>
@@ -783,16 +836,18 @@
             </div>
         </div>
 
-        <div class="photo-item" data-species="Eurasian Blackbird" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/622973462">
+        <div class="photo-item" data-species="Eurasian Blackbird" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/622973462" data-audio="birds/audio/turdus_merula.mp3" data-spectrogram="birds/audio/turdus_merula.png" data-rec-asset="https://macaulaylibrary.org/asset/624360823" data-sub="Germany · 2024">
             <img src="birds/turdus_merula.jpg" alt="Eurasian Blackbird" loading="lazy">
+            <div class="photo-badge" aria-hidden="true">♪</div>
             <div class="photo-label">
                 <span class="species-name">Eurasian Blackbird</span>
                 <span class="species-loc">Germany</span>
             </div>
         </div>
 
-        <div class="photo-item" data-species="European Robin" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623758450">
+        <div class="photo-item" data-species="European Robin" data-loc="Germany" data-asset="https://macaulaylibrary.org/asset/623758450" data-audio="birds/audio/erithacus_rubecula.mp3" data-spectrogram="birds/audio/erithacus_rubecula.png" data-rec-asset="https://macaulaylibrary.org/asset/624356163" data-sub="England · 2024">
             <img src="birds/erithacus_rubecula.jpg" alt="European Robin" loading="lazy">
+            <div class="photo-badge" aria-hidden="true">♪</div>
             <div class="photo-label">
                 <span class="species-name">European Robin</span>
                 <span class="species-loc">Germany</span>
@@ -1441,6 +1496,7 @@
     <div class="lightbox-inner" id="lbInner">
         <img id="lbImg" src="" alt="">
         <div class="lightbox-caption" id="lbCaption"></div>
+        <div class="lb-audio" id="lbAudio"></div>
     </div>
 </div>
 
@@ -1455,10 +1511,11 @@
 <script>
 (function () {
     var items = Array.from(document.querySelectorAll('.photo-item'));
-    var lb    = document.getElementById('lightbox');
-    var lbImg = document.getElementById('lbImg');
-    var lbCap = document.getElementById('lbCaption');
-    var cur   = 0;
+    var lb     = document.getElementById('lightbox');
+    var lbImg  = document.getElementById('lbImg');
+    var lbCap  = document.getElementById('lbCaption');
+    var lbAudio = document.getElementById('lbAudio');
+    var cur    = 0;
 
     function renderCaption(el) {
         var species = el.dataset.species;
@@ -1472,6 +1529,18 @@
         return html;
     }
 
+    function clearAudio() {
+        // pause and remove any embedded player so audio stops on nav/close
+        var prev = lbAudio.querySelector('.spectro-player');
+        if (prev && prev._spectroAudio) {
+            prev._spectroAudio.pause();
+            // drop it from the shared registry
+            var i = audios.indexOf(prev._spectroAudio);
+            if (i !== -1) audios.splice(i, 1);
+        }
+        lbAudio.innerHTML = '';
+    }
+
     function show(idx) {
         cur = idx;
         var el  = items[idx];
@@ -1479,6 +1548,24 @@
         lbImg.src = img.src;
         lbImg.alt = el.dataset.species;
         lbCap.innerHTML = renderCaption(el);
+
+        clearAudio();
+        // If this species has a recording, embed a spectrogram player below
+        if (el.dataset.audio) {
+            var player = buildSpectroPlayer(
+                el.dataset.audio,
+                el.dataset.spectrogram,
+                el.dataset.species,
+                el.dataset.sub || el.dataset.loc || '',
+                el.dataset.recAsset || ''
+            );
+            lbAudio.appendChild(player);
+            initSpectro(player);
+            // align playhead once layout has a real width
+            requestAnimationFrame(function () {
+                if (player._spectroPaint) player._spectroPaint();
+            });
+        }
     }
 
     function open(idx) {
@@ -1491,6 +1578,7 @@
         lb.classList.remove('open');
         document.body.style.overflow = '';
         lbImg.src = '';
+        clearAudio();
     }
 
     function step(dir) {
@@ -1544,8 +1632,7 @@
     });
 
     /* ── Spectrogram audio players ──────────────────────────────────── */
-    var players = Array.from(document.querySelectorAll('.spectro-player'));
-    var audios  = [];
+    var audios = [];   // shared registry so only one plays at a time
 
     function fmt(t) {
         if (!isFinite(t) || t < 0) t = 0;
@@ -1554,7 +1641,9 @@
         return m + ':' + (s < 10 ? '0' : '') + s;
     }
 
-    players.forEach(function (player) {
+    // Initialise a single .spectro-player element. Returns the audio object
+    // so callers (e.g. the lightbox) can pause/clean it up.
+    function initSpectro(player) {
         var src      = player.dataset.audio;
         var btn      = player.querySelector('.spectro-play');
         var figure   = player.querySelector('.spectro-figure');
@@ -1576,7 +1665,6 @@
             if (frac > 1) frac = 1;
             var w = figure.clientWidth;
             playhead.style.transform = 'translateX(' + (frac * w) + 'px)';
-            // progress overlay dims the *unplayed* (right) portion
             progress.style.left = (frac * 100) + '%';
             curEl.textContent = fmt(audio.currentTime);
         }
@@ -1590,45 +1678,70 @@
             durEl.textContent = fmt(audio.duration);
             paint();
         });
-
         audio.addEventListener('play', function () {
-            // pause every other player
             audios.forEach(function (a) { if (a !== audio) a.pause(); });
             btn.textContent = '❚❚';
             loop();
         });
-
         audio.addEventListener('pause', function () {
             btn.textContent = '▶';
             if (raf) cancelAnimationFrame(raf);
             paint();
         });
-
         audio.addEventListener('ended', function () {
             btn.textContent = '▶';
             audio.currentTime = 0;
             paint();
         });
-
         btn.addEventListener('click', function () {
             if (audio.paused) audio.play(); else audio.pause();
         });
 
-        // Click (or drag) on the spectrogram to seek
         function seekFromEvent(e) {
             var rect = figure.getBoundingClientRect();
             var x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
             var frac = Math.min(Math.max(x / rect.width, 0), 1);
-            if (audio.duration) {
-                audio.currentTime = frac * audio.duration;
-                paint();
-            }
+            if (audio.duration) { audio.currentTime = frac * audio.duration; paint(); }
         }
         figure.addEventListener('click', seekFromEvent);
-
-        // Repaint playhead position on resize (width changes)
         window.addEventListener('resize', paint);
-    });
+
+        // expose a repaint hook so the lightbox can align the playhead once
+        // its container becomes visible and has a real width
+        player._spectroPaint = paint;
+        player._spectroAudio = audio;
+        return audio;
+    }
+
+    // Initialise all standing players in the Field Recordings section
+    Array.prototype.forEach.call(document.querySelectorAll('.recordings .spectro-player'), initSpectro);
+
+    // Build a spectro-player DOM node from an HTML string (used by lightbox)
+    function buildSpectroPlayer(audioSrc, specSrc, species, sub, asset) {
+        var assetLine = '';
+        if (asset && asset.indexOf('REPLACE_ME') === -1) {
+            var mlId = asset.replace(/.*\/asset\//, 'ML');
+            assetLine = ' &nbsp;·&nbsp; <a href="' + asset + '" target="_blank" rel="noopener">' + mlId + ' ↗</a>';
+        }
+        var wrap = document.createElement('div');
+        wrap.className = 'spectro-player';
+        wrap.dataset.audio = audioSrc;
+        wrap.innerHTML =
+            '<div class="spectro-head">' +
+                '<button class="spectro-play" aria-label="Play recording">▶</button>' +
+                '<div class="spectro-meta">' +
+                    '<div class="spectro-name">' + species + '</div>' +
+                    '<div class="spectro-sub">' + sub + assetLine + '</div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="spectro-figure">' +
+                '<img src="' + specSrc + '" alt="Spectrogram of ' + species + '">' +
+                '<div class="spectro-progress"></div>' +
+                '<div class="spectro-playhead"></div>' +
+            '</div>' +
+            '<div class="spectro-time"><span class="spectro-cur">0:00</span><span class="spectro-dur">0:00</span></div>';
+        return wrap;
+    }
 })();
 </script>
 
